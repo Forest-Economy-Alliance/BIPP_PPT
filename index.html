@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Technology at BIPP: From Data to Decisions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+
+<style>
+  /* ── TOKENS ── BIPP · ISB Brand Palette */
+  :root {
+    --brand-dark:     #ffffff;   /* slide background — white */
+    --brand-mid:      #EEF2F8;   /* card/info-box backgrounds — BIPP light grey-blue */
+    --brand-accent:   #4E72D6;   /* ISB royal blue */
+    --brand-accent2:  #E8A838;   /* warm gold — complementary accent */
+    --brand-text:     #EDF1FF;   /* light text — used inside dark boxes */
+    --brand-muted:    #7A90B8;
+    --brand-line:     rgba(25, 40, 144, 0.2);
+    --font-display:   'Playfair Display', serif;
+    --font-body:      'Inter', sans-serif;
+  }
+
+  /* ── BASE ── */
+  body { background: #ffffff; }  /* outer reveal bg = white, matches header at all window sizes */
+  .reveal { font-family: var(--font-body); background: var(--brand-dark); }
+  .reveal .slides { text-align: left; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: var(--font-display); color: #192890; text-transform: none; letter-spacing: -0.02em; }
+
+  /* ── COVER SLIDE ── */
+  .cover { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; height:100vh; padding: 0 8vw; position:relative; overflow:hidden; }
+  .cover-eyebrow { font-family:var(--font-display); font-size:0.75rem; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--brand-accent); margin-bottom:1.6rem; }
+  .cover h1 { font-size:clamp(2.4rem,5vw,4rem); font-weight:800; color:var(--brand-text); line-height:1.08; margin:0 0 1.2rem; max-width:700px; }
+  .cover-sub { font-size:1rem; color:var(--brand-muted); font-weight:300; margin-bottom:2.4rem; }
+  .cover-date { font-size:0.78rem; font-family:var(--font-display); letter-spacing:0.14em; color:var(--brand-accent); text-transform:uppercase; }
+  .cover-bg-circle { position:absolute; right:-10vw; top:-10vh; width:60vw; height:60vw; border-radius:50%; border:1px solid var(--brand-line); pointer-events:none; }
+  .cover-bg-circle2 { position:absolute; right:-5vw; top:-5vh; width:45vw; height:45vw; border-radius:50%; border:1px solid var(--brand-line); pointer-events:none; }
+  .cover-dot { width:8px; height:8px; border-radius:50%; background:var(--brand-accent); display:inline-block; margin-right:10px; }
+
+  /* ── NAV BAR (invisible spacer — visual header is #g-header fixed overlay) ── */
+  .slide-nav { display:flex; align-items:center; min-height:44px; box-sizing:border-box; visibility:hidden; }
+  .project-slide .slide-nav { margin:-1.5vh -6vw 0.8rem -6vw; padding:0.4rem 6vw; }
+  .demo-slide .slide-nav   { margin:-1.5vh -4vw 0.8rem -4vw; padding:0.4rem 4vw; }
+  .slide-nav-logo { font-family:var(--font-display); font-size:0.7rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--brand-accent); }
+  .slide-nav-label { font-family:var(--font-body); font-size:0.62rem; font-weight:600; letter-spacing:0.12em; color:#1B2C50; }
+
+  /* ── GLOBAL FIXED HEADER — outside the scaled .slides canvas, always 100vw ── */
+  #g-header { position:fixed; top:0; left:0; width:100%; z-index:99999; display:none; align-items:center; justify-content:space-between; background:#ffffff; border-bottom:2.5px solid var(--brand-accent); box-sizing:border-box; pointer-events:none; }
+
+  /* ── PROJECT SLIDE ── */
+  .project-slide { padding: 1.5vh 6vw; height:100%; box-sizing:border-box; display:flex; flex-direction:column; }
+  .project-tag { display:inline-block; font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--brand-dark); background:var(--brand-accent); padding:3px 10px; border-radius:2px; margin-bottom:0.8rem; }
+  .project-tag.amber { background:var(--brand-accent2); }
+  .project-tag.blue { background:#4A9EF4; }
+  .project-tag.purple { background:#A78BFA; }
+  .project-tag.rose { background:#F87171; }
+  .project-tag.teal { background:#2DD4BF; }
+  .project-tag.orange { background:#FB923C; }
+
+  .project-title { font-size:clamp(1.6rem,3vw,2.4rem); font-weight:800; color:#192890; margin:0 0 0.3rem; line-height:1.1; }
+  .project-tagline { font-size:0.85rem; color:var(--brand-accent); font-weight:500; font-style:italic; margin-bottom:1.2rem; }
+
+  /* ── TWO-COL INFO ── */
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; flex:1; }
+  .info-box { background:#EEF2F8; border:none; border-left:3px solid #192890; border-radius:0 6px 6px 0; padding:1.1rem 1.3rem; }
+  .info-box-title { font-family:var(--font-body); font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#192890; margin-bottom:0.7rem; }
+  .info-box p { font-size:0.9rem; color:#374151; line-height:1.6; margin:0 0 0.5rem; font-weight:400; }
+  .info-box ul { margin:0; padding-left:1rem; }
+  .info-box ul li { font-size:0.86rem; color:#374151; line-height:1.65; font-weight:400; margin-bottom:0.15rem; }
+
+  /* ── UPDATE PILLS ── */
+  .update-pills { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.5rem; }
+  .pill { font-size:0.65rem; background:#EEF2F8; border:1px solid #192890; color:#192890; border-radius:100px; padding:3px 10px; line-height:1.5; }
+  .pill.amber { background:rgba(232,168,56,0.1); border-color:#E8A838; color:#92600A; }
+
+  /* ── DEMO SLIDE ── */
+  .demo-slide { padding:2vh 4vw; height:100%; box-sizing:border-box; display:flex; flex-direction:column; }
+  .demo-header { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
+  .demo-label { font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--brand-accent2); }
+  .demo-title { font-size:1.1rem; font-weight:700; color:#192890; font-family:var(--font-display); }
+  .demo-frame-wrap { flex:1; background:var(--brand-mid); border:1px solid var(--brand-line); border-radius:10px; overflow:hidden; position:relative; min-height:0; }
+  .demo-frame-wrap iframe { width:100%; height:100%; border:none; display:block; }
+
+  /* ── IFRAME SLIDE ── */
+  .iframe-slide { height:100%; display:flex; flex-direction:column; overflow:hidden; box-sizing:border-box; padding:0; }
+  .iframe-slide .slide-nav { flex-shrink:0; padding:0.7rem 4vw; }
+  .iframe-wrap { flex:1; position:relative; min-height:0; }
+  .iframe-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+  .iframe-bar { flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0.4rem 4vw; background:#EEF2F8; border-top:2px solid rgba(25,40,144,0.12); gap:1rem; }
+  .iframe-bar-title { font-size:0.75rem; font-weight:500; color:#374151; }
+  .iframe-bar-links { display:flex; gap:1.2rem; align-items:center; }
+  .iframe-bar a { font-size:0.75rem; font-weight:600; color:#4E72D6; text-decoration:none; white-space:nowrap; }
+  .iframe-bar a:hover { text-decoration:underline; }
+
+  /* ── STORE CARD (Play Store sub-slides) ── */
+  .store-card-wrap { flex:1; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#f0f4ff 0%,#EEF2F8 100%); }
+  .store-card { background:#fff; border-radius:1.5rem; box-shadow:0 6px 40px rgba(25,40,144,0.12); padding:2.8rem 4rem; display:flex; flex-direction:column; align-items:center; gap:1.6rem; min-width:360px; }
+  .store-card-badge { display:flex; align-items:center; gap:0.7rem; background:#f8faff; border:1.5px solid #dde5f7; border-radius:0.6rem; padding:0.4rem 1rem; }
+  .store-card-badge svg { flex-shrink:0; }
+  .store-card-badge-text { font-size:0.7rem; font-weight:600; color:#4E72D6; letter-spacing:0.06em; text-transform:uppercase; }
+  .store-card-appname { font-family:var(--font-display); font-size:2rem; font-weight:700; color:#192890; text-align:center; }
+  .store-card-sub { font-size:0.85rem; color:#6b7280; text-align:center; max-width:320px; line-height:1.6; }
+  .store-card-btn { display:inline-flex; align-items:center; gap:0.55rem; background:#192890; color:#fff !important; font-family:var(--font-body); font-size:0.95rem; font-weight:600; padding:0.85rem 2.2rem; border-radius:0.75rem; text-decoration:none !important; transition:background 0.2s, transform 0.15s; }
+  .store-card-btn:hover { background:#4E72D6; transform:translateY(-2px); }
+  .demo-placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:1rem; }
+  .demo-placeholder-icon { font-size:2.5rem; opacity:0.3; }
+  .demo-placeholder-text { font-size:0.8rem; color:var(--brand-muted); text-align:center; line-height:1.6; }
+  .demo-placeholder-port { font-family:var(--font-display); font-size:0.7rem; color:var(--brand-accent); letter-spacing:0.1em; margin-top:0.3rem; }
+  .demo-port-badge { background:#EEF2F8; border:1px solid rgba(25,40,144,0.25); border-radius:6px; padding:6px 14px; font-size:0.68rem; font-family:var(--font-display); color:#192890; letter-spacing:0.1em; }
+
+  /* ── LINK CARDS (project links slide) ── */
+  .link-card { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.9rem; background:#EEF2F8; border:none; border-left:4px solid #192890; border-radius:0 14px 14px 0; padding:2.2rem 3rem; min-width:200px; text-decoration:none; transition:background 0.18s, transform 0.15s; }
+  .link-card:hover { background:#d8e2f4; transform:translateY(-4px); }
+  .link-card.link-card-web { border-left-color:#4E72D6; }
+  .link-card-name { font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:#192890; text-align:center; }
+  .link-card-sub { font-size:0.7rem; color:#6B7280; text-align:center; letter-spacing:0.04em; }
+
+  /* ── SECTION DIVIDER ── */
+  .divider-slide { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; height:100%; padding:0 8vw; position:relative; overflow:hidden; }
+  .divider-number { font-family:var(--font-display); font-size:clamp(5rem,12vw,10rem); font-weight:800; color:rgba(78,114,214,0.09); line-height:1; position:absolute; right:6vw; bottom:8vh; }
+  .divider-label { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--brand-accent); margin-bottom:1rem; }
+  .divider-title { font-size:clamp(2rem,4.5vw,3.2rem); font-weight:800; color:#192890; line-height:1.1; max-width:500px; }
+  .divider-line { width:48px; height:3px; background:var(--brand-accent); border-radius:2px; margin-top:1.4rem; }
+
+  /* ── CLOSING ── */
+  .closing { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; height:100%; padding:0 8vw; }
+  .closing h2 { font-size:clamp(2rem,4vw,3rem); font-weight:800; color:#192890; margin-bottom:1.4rem; }
+  .closing-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.8rem; margin-top:1.6rem; }
+  .closing-card { background:#EEF2F8; border:none; border-left:3px solid #192890; border-radius:0 6px 6px 0; padding:0.9rem 1rem; }
+  .closing-card-label { font-family:var(--font-display); font-size:0.55rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#6B7280; margin-bottom:0.4rem; }
+  .closing-card-val { font-size:0.85rem; font-weight:600; color:#192890; font-family:var(--font-display); }
+
+  /* ── CLOSING ANIMATIONS ── */
+  @keyframes orbDrift1 {
+    0%,100% { transform:translate(0,0) scale(1); }
+    33%     { transform:translate(-18px,28px) scale(1.06); }
+    66%     { transform:translate(22px,-12px) scale(0.96); }
+  }
+  @keyframes orbDrift2 {
+    0%,100% { transform:translate(0,0) scale(1); }
+    40%     { transform:translate(22px,-32px) scale(1.1); }
+    70%     { transform:translate(-12px,18px) scale(0.94); }
+  }
+  @keyframes orbDrift3 {
+    0%,100% { transform:translate(0,0) scale(1); }
+    50%     { transform:translate(-25px,-20px) scale(1.08); }
+  }
+  .c-orb { position:absolute; border-radius:50%; pointer-events:none; filter:blur(80px); z-index:0; }
+  .c-orb-1 { width:500px; height:500px; background:radial-gradient(circle at 40% 40%, rgba(78,114,214,0.18) 0%, transparent 70%); right:-100px; top:-100px; animation:orbDrift1 11s ease-in-out infinite; }
+  .c-orb-2 { width:340px; height:340px; background:radial-gradient(circle at 50% 50%, rgba(25,40,144,0.11) 0%, transparent 70%); right:220px; bottom:-80px; animation:orbDrift2 14s ease-in-out infinite 1.5s; }
+  .c-orb-3 { width:220px; height:220px; background:radial-gradient(circle at 50% 50%, rgba(232,168,56,0.14) 0%, transparent 70%); right:60px; top:42%; animation:orbDrift3 9s ease-in-out infinite 3s; }
+  @keyframes closingGradShift {
+    0%,100% { background-position:0% 50%; }
+    50%     { background-position:100% 50%; }
+  }
+  .closing-h2-anim {
+    background:linear-gradient(120deg, #192890 0%, #4E72D6 40%, #192890 65%, #192890 100%);
+    background-size:280% 280%;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+    animation:closingGradShift 7s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%,100% { transform:scale(1);    box-shadow:0 0 0 0   rgba(25,40,144,0.5); }
+    50%     { transform:scale(1.3);  box-shadow:0 0 0 7px rgba(25,40,144,0); }
+  }
+  .cover-dot-pulse { animation:dotPulse 2.6s ease-in-out infinite; }
+  @keyframes tagFloat {
+    0%   { opacity:0; transform:translateY(14px); }
+    12%  { opacity:0.22; }
+    88%  { opacity:0.22; }
+    100% { opacity:0; transform:translateY(-50px); }
+  }
+  .c-tag { position:absolute; font-family:var(--font-display); font-weight:700; color:#111827; pointer-events:none; z-index:0; animation:tagFloat 7s ease-in-out infinite; }
+
+  /* ── REVEAL OVERRIDES ── */
+  .reveal .progress { color:var(--brand-accent); }
+  .reveal .controls button { color:var(--brand-accent); }
+  .reveal .slide-number { color:var(--brand-muted); font-family:var(--font-display); font-size:0.6rem; letter-spacing:0.1em; }
+  .reveal section { height:100%; padding:0; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.55s ease both; }
+  .delay-1 { animation-delay:0.1s; }
+  .delay-2 { animation-delay:0.22s; }
+  .delay-3 { animation-delay:0.34s; }
+  .delay-4 { animation-delay:0.46s; }
+
+  /* ── STAT CALLOUT ── */
+  .stat-row { display:flex; gap:1rem; margin-top:0.6rem; }
+  .stat { background:#ffffff; border:1px solid rgba(25,40,144,0.2); border-radius:6px; padding:0.6rem 0.9rem; text-align:center; flex:1; }
+  .stat-val { font-family:var(--font-display); font-size:1.2rem; font-weight:800; color:#192890; line-height:1; }
+  .stat-label { font-size:0.58rem; color:#6B7280; margin-top:3px; letter-spacing:0.08em; text-transform:uppercase; }
+
+  /* pipeline stages */
+  .pipeline { display:flex; align-items:center; gap:0.4rem; margin-top:0.7rem; flex-wrap:wrap; }
+  .pipe-stage { background:#ffffff; border:1px solid rgba(25,40,144,0.2); border-radius:6px; padding:0.4rem 0.7rem; font-size:0.62rem; color:#374151; text-align:center; flex:1; min-width:80px; }
+  .pipe-stage span { display:block; font-family:var(--font-display); font-size:0.55rem; color:#6B7280; margin-top:2px; }
+  .pipe-arrow { color:var(--brand-accent); font-size:0.8rem; opacity:0.6; }
+
+  /* ── NAV LOGO ── */
+  .logo-placeholder { display:none; }
+  .nav-logo-wrap { background:#ffffff; border-radius:5px; padding:2px 6px; display:inline-flex; align-items:center; }
+  .nav-logo { height:26px; width:auto; display:block; }
+
+  /* ── COVER ON WHITE ── */
+  .cover h1   { color: #192890; }
+  .cover .cover-sub  { color: #192890; }
+
+  /* ══════════════════════════════════════════════
+     STORY / HP CASE-STUDY ANIMATION PRIMITIVES
+  ══════════════════════════════════════════════ */
+
+  /* phase badge + big count-up stat */
+  .phase-badge { display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:#fff; background:#192890; padding:4px 12px; border-radius:2px; margin-bottom:0.7rem; }
+  .phase-badge .ph-num { font-size:0.95rem; }
+
+  .count-row { display:flex; gap:1.4rem; margin-top:0.9rem; flex-wrap:wrap; }
+  .count-box { text-align:left; }
+  .count-val { font-family:var(--font-display); font-size:2.1rem; font-weight:800; color:#192890; line-height:1; }
+  .count-label { font-size:0.62rem; color:#6B7280; text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+
+  /* ── offline sync flow (phase 1) ── */
+  .flow-wrap { flex:1; display:flex; align-items:center; justify-content:center; min-height:0; }
+  .flow-node { fill:#EEF2F8; stroke:#192890; stroke-width:1.5; }
+  .flow-node-label { font-family:'Inter',sans-serif; font-size:11px; fill:#192890; font-weight:600; }
+  .flow-node-sub { font-family:'Inter',sans-serif; font-size:8.5px; fill:#6B7280; }
+  .flow-path { fill:none; stroke:#4E72D6; stroke-width:2; stroke-dasharray:6 6; animation:flowDash 1.6s linear infinite; opacity:0.6; }
+  @keyframes flowDash { to { stroke-dashoffset:-24; } }
+  .flow-dot { filter:drop-shadow(0 0 3px rgba(78,114,214,0.7)); }
+  .signal-bar { fill:#E8A838; transition:fill 0.35s ease, opacity 0.35s ease; }
+  @keyframes barPulse { 0%,100%{ opacity:0.35; } 50%{ opacity:1; } }
+
+  /* ── phase 1 story states : offline → connect → sync → confirm → dashboard ── */
+  .p1-signal.offline .signal-bar { fill:#9CA3AF; opacity:0.3; animation:none; }
+  .p1-signal.online  .signal-bar { fill:#22C55E; animation:barPulse 1.3s ease-in-out infinite; }
+  .p1-signal-slash { stroke:#EF4444; stroke-width:2; stroke-linecap:round; opacity:1; transition:opacity 0.3s ease; }
+  .p1-signal.online .p1-signal-slash { opacity:0; }
+  .p1-status-label { font-family:'Inter',sans-serif; font-size:9px; font-weight:600; transition:fill 0.3s ease; }
+  .p1-status-label.offline-text { fill:#9CA3AF; }
+  .p1-status-label.online-text  { fill:#16A34A; }
+
+  .p1-pip { opacity:0; transform:scale(0.3); transform-box:fill-box; transform-origin:center; transition:opacity 0.25s ease, transform 0.25s ease; }
+  .p1-pip.filled { opacity:1; transform:scale(1); }
+
+  .p1-path { fill:none; stroke:#4E72D6; stroke-width:1.5; stroke-dasharray:6 6; opacity:0.22; transition:opacity 0.3s ease, stroke-width 0.3s ease; animation:flowDash 1.6s linear infinite; }
+  .p1-path.active { opacity:0.9; stroke-width:2.2; }
+
+  .p1-burst-dot { filter:drop-shadow(0 0 3px rgba(78,114,214,0.8)); opacity:0; }
+
+  .p1-node-pulse { animation:p1Pulse 0.6s ease; transform-box:fill-box; transform-origin:center; }
+  @keyframes p1Pulse { 0%{ transform:scale(1); } 45%{ transform:scale(1.06); } 100%{ transform:scale(1); } }
+
+  .p1-pin { opacity:0; transform:scale(0); transform-box:fill-box; transform-origin:center; fill:#E8A838; transition:opacity 0.3s ease, transform 0.3s cubic-bezier(.34,1.56,.64,1); }
+  .p1-pin.dropped { opacity:1; transform:scale(1); }
+
+  .p1-cov-fill { transition:width 0.8s cubic-bezier(.4,0,.2,1); }
+  .p1-dash-count { transition:opacity 0.25s ease; }
+
+  /* ── phase 2 story : field survey → satellite → training → distribution map ── */
+  .sd2-panel { position:relative; width:100%; max-width:440px; }
+  .sd2-svg { display:block; width:100%; height:auto; }
+  .sd2-region { fill:none; stroke:#192890; stroke-width:1.6; opacity:0.5; }
+
+  .sd2-hud { position:absolute; top:0; left:0; display:flex; align-items:center; gap:6px; font-family:'Inter',sans-serif; font-weight:600; font-size:9.5px; letter-spacing:0.03em; color:#192890; background:rgba(255,255,255,0.92); border:1px solid rgba(25,40,144,0.15); border-radius:20px; padding:3px 10px 3px 6px; }
+  .sd2-phase-dot { width:7px; height:7px; border-radius:50%; background:#7A90B8; flex-shrink:0; transition:background 0.3s ease; }
+  .sd2-phase-dot.is-live { background:#4E72D6; animation:sd2PulseDot 1.2s ease-in-out infinite; }
+  .sd2-phase-dot.is-done { background:#192890; animation:none; }
+  @keyframes sd2PulseDot { 0%,100%{ box-shadow:0 0 0 0 rgba(78,114,214,0.45); } 50%{ box-shadow:0 0 0 5px rgba(78,114,214,0); } }
+
+  .sd2-legend { position:absolute; left:0; bottom:0; background:rgba(255,255,255,0.92); border:1px solid rgba(25,40,144,0.15); border-radius:8px; padding:7px 10px; font-family:'Inter',sans-serif; font-weight:500; font-size:8.5px; color:#374151; display:flex; flex-direction:column; gap:4px; opacity:0; transition:opacity 0.4s ease; }
+  .sd2-legend.is-visible { opacity:1; }
+  .sd2-legend-row { display:flex; align-items:center; gap:6px; }
+  .sd2-legend-swatch { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+  .sd2-chip { transition:opacity 0.5s ease, transform 0.5s ease; transform-box:fill-box; transform-origin:center; }
+  .sd2-chip.sd2-chip-out { opacity:0; transform:scale(0.4) translateY(26px); }
+
+  .sd2-cell { transition:opacity 0.3s ease; }
+  .sd2-dist-dot { transition:r 0.3s cubic-bezier(.2,1.4,.4,1); }
+  .sd2-field-dot { transition:transform 0.25s cubic-bezier(.2,1.4,.4,1); }
+
+  /* ── phase 3 story : capture → classify → measure DBH → estimate carbon ── */
+  .sd3-panel { position:relative; width:100%; max-width:400px; margin:0 auto; }
+  .sd3-svg { display:block; width:100%; height:auto; }
+
+  .sd3-hud { position:absolute; top:0; left:0; display:flex; align-items:center; gap:6px; font-family:'Inter',sans-serif; font-weight:600; font-size:9.5px; letter-spacing:0.03em; color:#192890; background:rgba(255,255,255,0.92); border:1px solid rgba(25,40,144,0.15); border-radius:20px; padding:3px 10px 3px 6px; z-index:2; }
+  .sd3-phase-dot { width:7px; height:7px; border-radius:50%; background:#7A90B8; flex-shrink:0; transition:background 0.3s ease; }
+  .sd3-phase-dot.is-live { background:#4E72D6; animation:sd2PulseDot 1.2s ease-in-out infinite; }
+  .sd3-phase-dot.is-done { background:#192890; animation:none; }
+
+  .sd3-corner { fill:none; stroke:#E8A838; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:opacity 0.3s ease; }
+  .sd3-corner.is-visible { opacity:1; }
+
+  .sd3-flash { opacity:0; transition:opacity 0.15s ease; }
+  .sd3-flash.is-flash { opacity:0.85; }
+
+  .sd3-fade { opacity:0; transition:opacity 0.35s ease; }
+  .sd3-fade.is-visible { opacity:1; }
+
+  .sd3-caliper-arm { stroke:#E8A838; stroke-width:2; fill:none; }
+  .sd3-caliper-line { stroke:#E8A838; stroke-width:1.5; stroke-dasharray:4 4; }
+
+  /* ── Palampur adoption map (phase 4) ── */
+  .map-pulse-ring { animation:mapPulse 2.2s ease-out infinite; transform-origin:center; }
+  @keyframes mapPulse { 0%{ r:4; opacity:0.9; } 100%{ r:26; opacity:0; } }
+  .map-region { fill:#EEF2F8; stroke:rgba(25,40,144,0.35); stroke-width:1; }
+
+  /* ── continuous refresh loop (phase 5) ── */
+  .loop-ring { fill:none; stroke:#4E72D6; stroke-width:3; stroke-dasharray:14 10; animation:loopRotate 6s linear infinite; transform-origin:center; }
+  @keyframes loopRotate { to { transform:rotate(360deg); } }
+  .loop-ring-2 { fill:none; stroke:#E8A838; stroke-width:2; stroke-dasharray:4 8; animation:loopRotate 4s linear infinite reverse; transform-origin:center; }
+  .loop-icon-wrap { animation:iconFloat 3.4s ease-in-out infinite; }
+  @keyframes iconFloat { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+
+  /* ── portfolio card grid (final slide) ── */
+  .portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.65rem; flex:1; align-content:center; margin-top:0.25rem; }
+  .portfolio-card { background:#F8FAFF; border:1px solid #D1D9F5; border-left:3px solid #192890; border-radius:8px; padding:0.7rem 0.9rem; display:flex; flex-direction:column; gap:0.45rem; }
+  .portfolio-card.cross { border-left-color:#E8A838; background:#FFFBF0; border-color:#F5E4C0; }
+  .portfolio-card-state { font-family:var(--font-display); font-size:0.78rem; font-weight:700; color:#192890; }
+  .portfolio-card.cross .portfolio-card-state { color:#92600A; }
+  .portfolio-card-tools { display:flex; flex-wrap:wrap; gap:0.28rem; }
+  .portfolio-pill { background:#EEF2FF; color:#3730A3; font-size:0.6rem; font-family:'Inter',sans-serif; font-weight:600; padding:0.12rem 0.42rem; border-radius:4px; letter-spacing:0.02em; }
+  .portfolio-card.cross .portfolio-pill { background:#FEF3C7; color:#92600A; }
+
+  /* generic fade-in-up for staggered svg groups */
+  .svg-fade { opacity:0; animation:fadeUp 0.6s ease forwards; }
+
+  /* ── AI domains force network (portfolio slide) ── */
+  #bipp-net-wrap { flex:1; position:relative; min-height:0; }
+  #bipp-network { width:100%; height:100%; display:block; }
+  #bipp-net-legend { position:absolute; left:0; bottom:0; display:flex; gap:1.2rem; font-family:'Inter',sans-serif; font-size:0.58rem; font-weight:600; color:#374151; pointer-events:none; }
+  #bipp-net-legend .nl-item { display:flex; align-items:center; gap:5px; }
+  #bipp-net-legend .nl-dot { border-radius:50%; display:inline-block; flex-shrink:0; }
+</style>
+</head>
+<body>
+<!-- Global full-viewport header (positioned by JS to overlay slide-nav) -->
+<div id="g-header">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <img id="g-header-project-logo" class="nav-logo" src="" alt="" style="display:none;" />
+    <span id="g-header-label" class="slide-nav-label"></span>
+  </div>
+  <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+</div>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══════════════════════════════════════════════
+     COVER
+══════════════════════════════════════════════ -->
+<section data-background-color="#ffffff">
+  <div class="cover">
+    <div class="cover-bg-circle"></div>
+    <div class="cover-bg-circle2"></div>
+    <div style="margin-bottom:1.5rem;"><div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div></div>
+    <div class="cover-eyebrow fade-up"><span class="cover-dot"></span>BIPP · ISB</div>
+    <h1 class="fade-up delay-1">Technology at BIPP<br/><span style="font-size:0.52em; font-weight:600; opacity:0.75;">From Data to Decisions</span></h1>
+    <div class="cover-sub fade-up delay-2">The Tool Stack · The Intelligence Layer · The Spatial Layer</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     THE CASE — HIMACHAL PRADESH
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">The Case · Himachal Pradesh</div>
+    </div>
+    <div class="project-title fade-up">Counting Green Wealth</div>
+    <div class="project-tagline fade-up delay-2">Himachal Pradesh Forest Department × BIPP–ISB — a future-ready people's forest economy</div>
+    <div class="info-grid fade-up delay-3" style="grid-template-columns:1.3fr 1fr;">
+      <div class="info-box">
+        <div class="info-box-title">The Setting</div>
+        <p>Himachal Pradesh is one of India's most forest-endowed Himalayan states — steep terrain, huge ecological diversity, and forests that are central to climate, hydropower, and rural livelihoods alike.</p>
+        <p>The Himachal Pradesh Forest Department partnered with BIPP–ISB to build the data and technology infrastructure needed to actually see, measure, and manage this asset — from a single tree to a state-wide economy.</p>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">The Scale</div>
+        <div class="count-row">
+          <div class="count-box"><div class="count-val" data-target="500" data-suffix="+">0</div><div class="count-label">Forest Guards</div></div>
+          <div class="count-box"><div class="count-val" data-target="200000" data-suffix="">0</div><div class="count-label">Tree Records</div></div>
+        </div>
+        <div class="count-row">
+          <div class="count-box"><div class="count-val" data-target="55673" data-suffix=" km²">0</div><div class="count-label">Geography Covered</div></div>
+          <div class="count-box"><div class="count-val" data-target="22600" data-suffix=" Cr">0</div><div class="count-label">₹ Potential Unlocked</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 01 — OFFLINE DATA COLLECTION + DASHBOARD
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">Phase 01 · Data Collection</div>
+    </div>
+    <div class="project-title fade-up">From the Forest Floor</div>
+    <div class="project-tagline fade-up delay-2">An offline-first app and monitoring dashboard — built for the field</div>
+    <div class="flow-wrap fade-up delay-3" id="phase1-story">
+      <svg viewBox="0 0 1100 320" style="width:100%; max-width:1100px; height:auto;">
+        <!-- 1 · guard node (offline / online) -->
+        <g>
+          <circle class="flow-node" cx="66" cy="160" r="46"/>
+          <text x="66" y="155" text-anchor="middle" class="flow-node-label" style="font-size:12px;">Forest Guard</text>
+          <text x="66" y="172" text-anchor="middle" class="flow-node-sub" style="font-size:9px;">GPS + Photo Capture</text>
+        </g>
+        <g class="p1-signal offline" id="p1-signal" transform="translate(56,214)">
+          <rect class="signal-bar" x="0" y="12" width="6" height="7"/>
+          <rect class="signal-bar" x="8" y="7" width="6" height="12"/>
+          <rect class="signal-bar" x="16" y="0" width="6" height="19"/>
+          <line class="p1-signal-slash" x1="-4" y1="22" x2="27" y2="-4"/>
+        </g>
+        <text id="p1-status" x="66" y="246" text-anchor="middle" class="p1-status-label offline-text" style="font-size:10.5px;">Offline — collecting</text>
+
+        <!-- path 1 : guard → local queue -->
+        <path class="p1-path" id="p1-path-1" d="M112,160 H182"/>
+
+        <!-- 2 · local queue node -->
+        <g>
+          <rect class="flow-node" x="182" y="118" width="130" height="84" rx="11"/>
+          <text x="247" y="140" text-anchor="middle" class="flow-node-label" style="font-size:11.5px;">Local Queue</text>
+          <circle class="p1-pip" id="p1-pip-1" cx="214" cy="160" r="6" fill="#4E72D6"/>
+          <circle class="p1-pip" id="p1-pip-2" cx="247" cy="160" r="6" fill="#4E72D6"/>
+          <circle class="p1-pip" id="p1-pip-3" cx="280" cy="160" r="6" fill="#4E72D6"/>
+          <text x="247" y="182" text-anchor="middle" class="flow-node-sub" style="font-size:9px;">Works with zero signal</text>
+        </g>
+
+        <!-- path 2 : queue → server (sync burst) -->
+        <path class="p1-path" id="p1-path-2" d="M312,160 H382"/>
+        <circle class="p1-burst-dot" r="4.2" fill="#4E72D6">
+          <animateMotion id="p1-burst-1-motion" begin="indefinite" dur="0.7s" fill="freeze" path="M312,160 H382"/>
+          <animate id="p1-burst-1-op" attributeName="opacity" begin="indefinite" dur="0.7s" values="0;1;1;0" keyTimes="0;0.05;0.85;1" fill="freeze"/>
+        </circle>
+        <circle class="p1-burst-dot" r="4.2" fill="#4E72D6">
+          <animateMotion id="p1-burst-2-motion" begin="indefinite" dur="0.7s" fill="freeze" path="M312,160 H382"/>
+          <animate id="p1-burst-2-op" attributeName="opacity" begin="indefinite" dur="0.7s" values="0;1;1;0" keyTimes="0;0.05;0.85;1" fill="freeze"/>
+        </circle>
+        <circle class="p1-burst-dot" r="4.2" fill="#4E72D6">
+          <animateMotion id="p1-burst-3-motion" begin="indefinite" dur="0.7s" fill="freeze" path="M312,160 H382"/>
+          <animate id="p1-burst-3-op" attributeName="opacity" begin="indefinite" dur="0.7s" values="0;1;1;0" keyTimes="0;0.05;0.85;1" fill="freeze"/>
+        </circle>
+
+        <!-- 3 · server / cloud node -->
+        <g id="p1-server-node">
+          <ellipse class="flow-node" cx="446" cy="160" rx="64" ry="48"/>
+          <text x="446" y="155" text-anchor="middle" class="flow-node-label" style="font-size:11.5px;">Server</text>
+          <text x="446" y="173" text-anchor="middle" class="flow-node-sub" style="font-size:9px;">Central data store</text>
+        </g>
+
+        <!-- path 3 : server → confirmed points (feedback) -->
+        <path class="p1-path" id="p1-path-3" d="M510,160 H580"/>
+        <circle class="p1-burst-dot" r="4.2" fill="#E8A838">
+          <animateMotion id="p1-fb-dot-motion" begin="indefinite" dur="0.6s" fill="freeze" path="M510,160 H580"/>
+          <animate id="p1-fb-dot-op" attributeName="opacity" begin="indefinite" dur="0.6s" values="0;1;1;0" keyTimes="0;0.05;0.8;1" fill="freeze"/>
+        </circle>
+
+        <!-- 4 · confirmed points node -->
+        <g>
+          <rect class="flow-node" x="580" y="105" width="170" height="110" rx="11"/>
+          <text x="665" y="128" text-anchor="middle" class="flow-node-label" style="font-size:11.5px;">Points Confirmed</text>
+          <circle class="p1-pin" id="p1-pin-1" cx="623" cy="150" r="6"/>
+          <circle class="p1-pin" id="p1-pin-2" cx="665" cy="150" r="6"/>
+          <circle class="p1-pin" id="p1-pin-3" cx="707" cy="150" r="6"/>
+          <circle class="p1-pin" id="p1-pin-4" cx="623" cy="182" r="6"/>
+          <circle class="p1-pin" id="p1-pin-5" cx="665" cy="182" r="6"/>
+          <circle class="p1-pin" id="p1-pin-6" cx="707" cy="182" r="6"/>
+          <text x="665" y="202" text-anchor="middle" class="flow-node-sub" style="font-size:9px;"><tspan id="p1-pts-count">0</tspan> field points</text>
+        </g>
+
+        <!-- path 4 : confirmed points → dashboard -->
+        <path class="p1-path" id="p1-path-4" d="M750,160 H820"/>
+        <circle class="p1-burst-dot" r="4.2" fill="#4E72D6">
+          <animateMotion id="p1-dash-dot-motion" begin="indefinite" dur="0.6s" fill="freeze" path="M750,160 H820"/>
+          <animate id="p1-dash-dot-op" attributeName="opacity" begin="indefinite" dur="0.6s" values="0;1;1;0" keyTimes="0;0.05;0.8;1" fill="freeze"/>
+        </circle>
+
+        <!-- 5 · monitoring dashboard node -->
+        <g id="p1-dash-node">
+          <rect class="flow-node" x="820" y="98" width="235" height="124" rx="11"/>
+          <text x="937" y="122" text-anchor="middle" class="flow-node-label" style="font-size:11.5px;">Monitoring Dashboard</text>
+          <text id="p1-dash-count" x="937" y="146" text-anchor="middle" class="flow-node-sub" style="font-size:12px; font-weight:700; fill:#192890;">34% covered</text>
+          <rect x="852" y="163" width="170" height="11" rx="5.5" fill="#E5EAF5"/>
+          <rect class="p1-cov-fill" id="p1-cov-fill" x="852" y="163" width="58" height="11" rx="5.5" fill="#4E72D6"/>
+          <text x="937" y="196" text-anchor="middle" class="flow-node-sub" style="font-size:9px;">coverage, gaps &amp; quality — live</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 02 — AI/ML SPECIES DISTRIBUTION
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">Phase 02 · AI / ML Layer</div>
+    </div>
+    <div class="project-title fade-up">From Points to Patterns</div>
+    <div class="project-tagline fade-up delay-2">Multispecies deep learning + Random Forest SDMs, fused with satellite data</div>
+    <div class="info-grid fade-up delay-3" style="grid-template-columns:1fr 1.1fr;">
+      <div class="info-box">
+        <div class="info-box-title">What Feeds the Model</div>
+        <ul>
+          <li>~200,000 georeferenced tree points from the field</li>
+          <li>Sentinel-1 (radar) + Sentinel-2 (optical) imagery</li>
+          <li>Canopy height, topography, soil and climate layers</li>
+        </ul>
+        <div class="info-box-title" style="margin-top:0.8rem;">What Comes Out</div>
+        <p style="margin:0;">10m-resolution species distribution maps across the entire state — a working forest intelligence layer, not a static one-time inventory.</p>
+      </div>
+      <div class="flow-wrap" id="phase2-story">
+        <div class="sd2-panel">
+          <div class="sd2-hud">
+            <span class="sd2-phase-dot" id="sd2-phase-dot"></span>
+            <span id="sd2-phase-label">Idle</span>
+          </div>
+          <svg class="sd2-svg" viewBox="0 0 460 380">
+            <defs>
+              <clipPath id="sd2-clip">
+                <polygon points="120,300 70,220 95,110 200,55 320,50 400,95 430,180 395,270 300,315 190,320"/>
+              </clipPath>
+            </defs>
+            <polygon class="sd2-region" points="120,300 70,220 95,110 200,55 320,50 400,95 430,180 395,270 300,315 190,320"/>
+            <g id="sd2-grid" clip-path="url(#sd2-clip)"></g>
+            <g id="sd2-dist" clip-path="url(#sd2-clip)"></g>
+            <g id="sd2-field"></g>
+
+            <g id="sd2-sat" opacity="0" transform="translate(-30,175)">
+              <circle cx="0" cy="0" r="6" fill="#192890"/>
+              <rect x="-9" y="-2" width="6" height="4" fill="#192890" opacity="0.7"/>
+              <rect x="3"  y="-2" width="6" height="4" fill="#192890" opacity="0.7"/>
+              <text x="0" y="-13" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:8px; fill:#192890;">S1 · S2</text>
+            </g>
+
+            <g id="sd2-chips">
+              <g transform="translate(150,38)"><g class="sd2-chip" id="sd2-chip-1"><rect x="-34" y="-12" width="68" height="24" rx="4" fill="#4E72D6"/><text x="0" y="4" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:9px; fill:#fff;">RADAR</text></g></g>
+              <g transform="translate(230,38)"><g class="sd2-chip" id="sd2-chip-2"><rect x="-36" y="-12" width="72" height="24" rx="4" fill="#192890"/><text x="0" y="4" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:9px; fill:#fff;">OPTICAL</text></g></g>
+              <g transform="translate(312,38)"><g class="sd2-chip" id="sd2-chip-3"><rect x="-36" y="-12" width="72" height="24" rx="4" fill="#E8A838"/><text x="0" y="4" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:9px; fill:#192890;">TERRAIN</text></g></g>
+              <g transform="translate(390,38)"><g class="sd2-chip" id="sd2-chip-4"><rect x="-28" y="-12" width="56" height="24" rx="4" fill="#2DD4BF"/><text x="0" y="4" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:9px; fill:#192890;">SOIL</text></g></g>
+            </g>
+
+            <g id="sd2-model" opacity="0" transform="translate(240,190)">
+              <circle r="34" fill="none" stroke="#E5EAF5" stroke-width="5"/>
+              <circle id="sd2-ring-active" r="34" fill="none" stroke="#4E72D6" stroke-width="5" stroke-linecap="round" transform="rotate(-90)"/>
+              <circle r="24" fill="#EEF2F8" stroke="#192890" stroke-width="1.4"/>
+              <text id="sd2-model-pct" x="0" y="5" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:12px; fill:#192890;">0%</text>
+            </g>
+          </svg>
+          <div class="sd2-legend" id="sd2-legend">
+            <div class="sd2-legend-row"><span class="sd2-legend-swatch" style="background:#192890"></span>Deodar</div>
+            <div class="sd2-legend-row"><span class="sd2-legend-swatch" style="background:#E8A838"></span>Chir Pine</div>
+            <div class="sd2-legend-row"><span class="sd2-legend-swatch" style="background:#2DD4BF"></span>Oak</div>
+            <div class="sd2-legend-row"><span class="sd2-legend-swatch" style="background:#A78BFA"></span>Mixed / Other</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 03 — CARBON FROM IMAGERY
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">Phase 03 · Carbon Estimation</div>
+    </div>
+    <div class="project-title fade-up">Measuring Carbon, One Tree at a Time</div>
+    <div class="project-tagline fade-up delay-2">A deep learning model classifies species and measures DBH directly from a field photo</div>
+    <div class="info-grid fade-up delay-3" style="grid-template-columns:1fr 0.9fr;">
+      <div class="info-box">
+        <div class="info-box-title">The Pipeline</div>
+        <ul>
+          <li>Guard photographs the tree bark and trunk in the field</li>
+          <li>Model classifies the species from the image</li>
+          <li>Model measures diameter at breast height (DBH) from the same photo</li>
+          <li>Species + DBH → biomass → carbon, at tree level</li>
+        </ul>
+        <p style="margin-top:0.7rem;">The same 200,000-photo dataset that powers species mapping also becomes the input for a state-wide, tree-level carbon layer — no separate survey required.</p>
+      </div>
+      <div class="flow-wrap" id="phase3-story">
+        <div class="sd3-panel">
+          <div class="sd3-hud">
+            <span class="sd3-phase-dot" id="sd3-phase-dot"></span>
+            <span id="sd3-phase-label">Idle</span>
+          </div>
+          <svg class="sd3-svg" viewBox="0 0 360 380">
+            <!-- ground shadow -->
+            <ellipse cx="180" cy="345" rx="72" ry="8" fill="#EEF2F8"/>
+
+            <!-- branches (behind canopy, peeking out at the join) -->
+            <g stroke="#7a5636" stroke-width="6" fill="none" stroke-linecap="round">
+              <path d="M180,140 C170,118 148,102 122,90"/>
+              <path d="M180,140 C190,116 212,100 238,88"/>
+              <path d="M180,140 C178,112 180,84 183,58"/>
+              <path d="M180,140 C165,124 152,118 132,116"/>
+              <path d="M180,140 C196,122 210,118 230,118"/>
+            </g>
+
+            <!-- canopy -->
+            <g>
+              <ellipse cx="180" cy="102" rx="92" ry="60" fill="#6fae55"/>
+              <ellipse cx="122" cy="84"  rx="54" ry="42" fill="#9dc98a"/>
+              <ellipse cx="238" cy="88"  rx="50" ry="40" fill="#83bb68"/>
+              <ellipse cx="180" cy="54"  rx="50" ry="38" fill="#4a8c39"/>
+              <ellipse cx="150" cy="118" rx="42" ry="30" fill="#4a8c39" opacity="0.85"/>
+              <ellipse cx="216" cy="120" rx="44" ry="30" fill="#6fae55" opacity="0.9"/>
+            </g>
+
+            <!-- bark / trunk close-up -->
+            <rect x="138" y="140" width="84" height="200" rx="10" fill="#a97b53"/>
+            <g stroke="#7a5636" stroke-width="1.4" opacity="0.45" fill="none">
+              <path d="M154,144 C152,200 157,260 152,336"/>
+              <path d="M170,142 C173,210 167,280 172,338"/>
+              <path d="M188,143 C185,190 191,270 186,337"/>
+              <path d="M206,145 C209,220 204,290 208,336"/>
+            </g>
+            <rect id="sd3-flash" class="sd3-flash" x="138" y="140" width="84" height="200" rx="10" fill="#ffffff"/>
+
+            <!-- camera viewfinder corners -->
+            <polyline class="sd3-corner" points="152,128 126,128 126,154"/>
+            <polyline class="sd3-corner" points="208,128 234,128 234,154"/>
+            <polyline class="sd3-corner" points="126,326 126,352 152,352"/>
+            <polyline class="sd3-corner" points="234,326 234,352 208,352"/>
+
+            <!-- classification -->
+            <rect id="sd3-boxline" class="sd3-fade" x="138" y="140" width="84" height="200" rx="10" fill="none" stroke="#192890" stroke-width="2"/>
+            <g id="sd3-tag" class="sd3-fade" transform="translate(180,120)">
+              <rect id="sd3-tag-rect" x="-48" y="-14" width="96" height="26" rx="13" fill="#192890"/>
+              <text id="sd3-tag-text" x="0" y="5" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:10.5px; fill:#fff;">Deodar · 96%</text>
+            </g>
+
+            <!-- DBH calipers -->
+            <g id="sd3-calipers" class="sd3-fade">
+              <path class="sd3-caliper-arm" d="M118,255 H138 M118,285 H138 M118,255 V285"/>
+              <path class="sd3-caliper-arm" d="M242,255 H222 M242,285 H222 M242,255 V285"/>
+              <line class="sd3-caliper-line" x1="118" y1="270" x2="242" y2="270"/>
+              <text id="sd3-dbh-val" x="180" y="243" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; fill:#92600A;">0 cm</text>
+              <text x="180" y="303" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:600; font-size:9px; fill:#92600A;">diameter at breast height</text>
+            </g>
+
+            <!-- carbon result -->
+            <g id="sd3-carbon" class="sd3-fade" transform="translate(180,258)">
+              <rect x="-72" y="-52" width="144" height="104" rx="12" fill="rgba(255,255,255,0.95)" stroke="#192890" stroke-width="1.4"/>
+              <text id="sd3-carbon-species" x="0" y="-32" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:9px; fill:#374151;">Deodar · 0 cm</text>
+              <path d="M0,-20 C14,-12 14,4 0,12 C-14,4 -14,-12 0,-20 Z" fill="#2DD4BF"/>
+              <line x1="0" y1="12" x2="0" y2="20" stroke="#2DD4BF" stroke-width="2"/>
+              <text id="sd3-carbon-val" x="0" y="38" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:800; font-size:15px; fill:#192890;">0.00 tCO2e</text>
+              <text x="0" y="50" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:500; font-size:7.5px; fill:#6B7280;">illustrative, tree-level estimate</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 04 — PALAMPUR ADOPTION
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">Phase 04 · Real Adoption</div>
+    </div>
+    <div class="project-title fade-up">From Model to Management Plan</div>
+    <div class="project-tagline fade-up delay-2">Palampur Forest Division was the first to put this data to work</div>
+    <div class="info-grid fade-up delay-3" style="grid-template-columns:1fr 0.9fr;">
+      <div class="info-box">
+        <div class="info-box-title">Why This Moment Matters</div>
+        <p>Species distribution and yield maps generated by the pipeline weren't just published as a report — they were used directly by Palampur block in preparing their own forest management plan.</p>
+        <p style="margin-top:0.6rem;">This is the point the work stopped being a pilot and became something a real forest division relies on to make decisions.</p>
+      </div>
+      <div class="flow-wrap">
+        <svg viewBox="0 0 260 260" style="width:100%; max-width:230px; height:auto;">
+          <path class="map-region" d="M80,20 L170,35 L200,90 L180,150 L200,200 L140,235 L90,220 L60,170 L40,110 L55,60 Z"/>
+          <circle cx="110" cy="110" r="4" fill="#F87171"/>
+          <circle class="map-pulse-ring" cx="110" cy="110" r="4" fill="none" stroke="#F87171" stroke-width="2"/>
+          <text x="110" y="95" text-anchor="middle" class="flow-node-label" style="font-size:10px;">Palampur</text>
+          <text x="110" y="250" text-anchor="middle" class="flow-node-sub">Himachal Pradesh</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 05 — FOREST INTELLIGENCE LAYER
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">Phase 05 · What's Next</div>
+    </div>
+    <div class="project-title fade-up">The Forest Intelligence Layer</div>
+    <div class="project-tagline fade-up delay-2">An HP-specific LLM + deep learning system that never stops learning</div>
+    <div class="info-grid fade-up delay-3" style="grid-template-columns:1fr 0.9fr;">
+      <div class="info-box">
+        <div class="info-box-title">The Idea</div>
+        <p>Rather than a model trained once and left static, this layer continuously refreshes itself — pulling in new forest guard observations and new satellite imagery as they arrive.</p>
+        <p style="margin-top:0.6rem;">Built specifically for Himachal Pradesh's forest governance context, combining LLM-based reasoning with the deep learning models already in place.</p>
+      </div>
+      <div class="flow-wrap">
+        <svg viewBox="0 0 260 260" style="width:100%; max-width:230px; height:auto;">
+          <circle class="loop-ring" cx="130" cy="130" r="80"/>
+          <circle class="loop-ring-2" cx="130" cy="130" r="60"/>
+          <g class="loop-icon-wrap"><circle cx="130" cy="45" r="16" fill="#EEF2F8" stroke="#192890" stroke-width="1.4"/><text x="130" y="50" text-anchor="middle" style="font-size:14px;">👤</text></g>
+          <g class="loop-icon-wrap" style="animation-delay:0.6s"><circle cx="220" cy="130" r="16" fill="#EEF2F8" stroke="#192890" stroke-width="1.4"/><text x="220" y="135" text-anchor="middle" style="font-size:14px;">🛰️</text></g>
+          <g class="loop-icon-wrap" style="animation-delay:1.2s"><circle cx="130" cy="215" r="16" fill="#EEF2F8" stroke="#192890" stroke-width="1.4"/><text x="130" y="220" text-anchor="middle" style="font-size:14px;">🧠</text></g>
+          <g class="loop-icon-wrap" style="animation-delay:1.8s"><circle cx="40" cy="130" r="16" fill="#EEF2F8" stroke="#192890" stroke-width="1.4"/><text x="40" y="135" text-anchor="middle" style="font-size:14px;">🗺️</text></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     THE ECOSYSTEM / PORTFOLIO — NETWORK OF STATES
+══════════════════════════════════════════════ -->
+<section>
+  <iframe src="https://gs.nubits.net" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none; z-index:0;"></iframe>
+</section>
+<!-- ══════════════════════════════════════════════
+     CLOSING
+══════════════════════════════════════════════ -->
+<section>
+  <div class="closing" style="position:relative; overflow:hidden;">
+    <div class="c-orb c-orb-1"></div>
+    <div class="c-orb c-orb-2"></div>
+    <div class="c-orb c-orb-3"></div>
+    <span class="c-tag" style="font-size:1.6rem; right:18%; top:12%; animation-duration:8s;  animation-delay:0s;">nCount</span>
+    <span class="c-tag" style="font-size:1.3rem; right:8%;  top:38%; animation-duration:10s; animation-delay:1.2s;">CommFor</span>
+    <span class="c-tag" style="font-size:1.8rem; right:30%; top:55%; animation-duration:9s;  animation-delay:2.5s;">RatiFi</span>
+    <span class="c-tag" style="font-size:1.1rem; right:52%; top:18%; animation-duration:11s; animation-delay:0.7s;">Van Saathi</span>
+    <span class="c-tag" style="font-size:1.2rem; right:42%; top:68%; animation-duration:7.5s;animation-delay:3.5s;">LMS</span>
+    <span class="c-tag" style="font-size:1.4rem; right:62%; top:45%; animation-duration:12s; animation-delay:1.8s;">VanGyan</span>
+    <span class="c-tag" style="font-size:1.0rem; right:22%; top:75%; animation-duration:8.5s; animation-delay:4.2s;">Haat Census</span>
+    <span class="c-tag" style="font-size:1.2rem; right:70%; top:30%; animation-duration:9.5s; animation-delay:2.0s;">BarkVisionAI</span>
+    <span class="c-tag" style="font-size:1.1rem; right:50%; top:60%; animation-duration:10.5s;animation-delay:0.5s;">MonoDBH</span>
+    <span class="c-tag" style="font-size:1.3rem; right:35%; top:35%; animation-duration:11.5s;animation-delay:3.0s;">SDM</span>
+    <span class="c-tag" style="font-size:1.1rem; right:12%; top:58%; animation-duration:9.8s; animation-delay:2.8s;">FSVE</span>
+    <div id="closing-content" style="position:relative; z-index:1;">
+      <div style="margin-bottom:1.5rem;"><div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div></div>
+      <div class="cover-eyebrow"><span class="cover-dot cover-dot-pulse"></span>BIPP · ISB</div>
+      <h2 class="fade-up closing-h2-anim">One stack, three layers,<br/>built for the field.</h2>
+      <p class="fade-up delay-1" style="color:var(--brand-muted); font-size:0.85rem; max-width:520px; line-height:1.7;">The Offline Stack gets data in and out where connectivity can't be assumed. The Intelligence Layer turns that data into measurement, plans, and knowledge. The Spatial Layer turns it into decisions on the ground — for communities and governments alike.</p>
+    </div>
+  </div>
+</section>
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    controls: true,
+    progress: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0,
+    minScale: 0.2,
+    maxScale: 2.0,
+    keyboard: {
+      // 'f' opens fullscreen
+      70: () => { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+    }
+  });
+
+  // ── GLOBAL HEADER SYNC ──
+  // Reads the position of the invisible .slide-nav spacer inside the scaled canvas
+  // and maps it onto the fixed #g-header so it visually lines up, but spans 100vw.
+  const gHeader      = document.getElementById('g-header');
+  const gLabel       = document.getElementById('g-header-label');
+  const gProjectLogo = document.getElementById('g-header-project-logo');
+
+  function syncHeader(slide) {
+    const nav = slide ? slide.querySelector('.slide-nav') : null;
+    if (!nav) { gHeader.style.display = 'none'; return; }
+
+    // Get exact rendered position of the spacer in viewport coords
+    const rect = nav.getBoundingClientRect();
+
+    // Update label text
+    const labelEl = nav.querySelector('.slide-nav-label');
+    gLabel.textContent = labelEl ? labelEl.textContent : '';
+
+    // Update project logo (left) — show only when this slide has a data-logo attribute
+    const logoSrc = nav.dataset.logo || '';
+    if (logoSrc) {
+      gProjectLogo.src = logoSrc;
+      gProjectLogo.alt = nav.dataset.logoAlt || '';
+      gProjectLogo.style.filter = nav.dataset.logoFilter || '';
+      gProjectLogo.style.display = 'block';
+    } else {
+      gProjectLogo.style.display = 'none';
+    }
+
+    // BIPP logo (right) is always fixed in HTML — never touched here
+
+    // Position the fixed overlay to exactly cover the spacer row
+    // but extend it edge-to-edge across the full viewport
+    gHeader.style.top    = rect.top    + 'px';
+    gHeader.style.height = rect.height + 'px';
+    // Pad logo/label so they align with the slide content edges
+    gHeader.style.paddingLeft  = Math.max(rect.left,  12) + 'px';
+    gHeader.style.paddingRight = Math.max(window.innerWidth - rect.right, 12) + 'px';
+    gHeader.style.display = 'flex';
+  }
+
+  Reveal.on('ready',        e => syncHeader(e.currentSlide));
+  Reveal.on('slidechanged', e => syncHeader(e.currentSlide));
+  window.addEventListener('resize', () => { syncHeader(Reveal.getCurrentSlide()); });
+</script>
+
+<script>
+  /* ── COUNT-UP NUMBERS ── animates any .count-val[data-target] when its slide becomes current */
+  function runCountUps(slide) {
+    if (!slide) return;
+    var els = slide.querySelectorAll('.count-val[data-target]');
+    els.forEach(function (el) {
+      if (el._counted) return; // only animate once per visit-cycle reset below
+      var target = parseFloat(el.getAttribute('data-target'));
+      var suffix = el.getAttribute('data-suffix') || '';
+      var duration = 1100;
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var val = target * eased;
+        el.textContent = (target % 1 !== 0 ? val.toFixed(1) : Math.round(val).toLocaleString('en-IN')) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  function resetCountUps(slide) {
+    if (!slide) return;
+    slide.querySelectorAll('.count-val[data-target]').forEach(function (el) { el._counted = false; el.textContent = '0'; });
+  }
+  Reveal.on('slidechanged', function (e) {
+    if (e.previousSlide) resetCountUps(e.previousSlide);
+    runCountUps(e.currentSlide);
+  });
+  Reveal.on('ready', function (e) { runCountUps(e.currentSlide); });
+</script>
+
+<script>
+/* ── PHASE 01: offline → connect → sync → confirm → dashboard, looping ── */
+(function () {
+  var timers = [];
+  var covSteps = [34, 51, 66, 79, 88, 95];
+  var covIdx = -1;
+
+  function $(id) { return document.getElementById(id); }
+
+  function schedule(delay, fn) {
+    var id = window.setTimeout(fn, delay);
+    timers.push(id);
+    return id;
+  }
+  function stopCycle() {
+    timers.forEach(function (id) { clearTimeout(id); });
+    timers = [];
+  }
+
+  function setSignal(state) {
+    var g = $('p1-signal');
+    if (!g) return;
+    g.classList.remove('offline', 'online');
+    g.classList.add(state);
+    var label = $('p1-status');
+    if (label) {
+      label.textContent = state === 'online' ? 'Online — syncing' : 'Offline — collecting';
+      label.classList.toggle('online-text', state === 'online');
+      label.classList.toggle('offline-text', state === 'offline');
+    }
+  }
+  function setPath(id, active) {
+    var el = $(id);
+    if (el) el.classList.toggle('active', !!active);
+  }
+  function pulse(id) {
+    var el = $(id);
+    if (!el) return;
+    el.classList.remove('p1-node-pulse');
+    void el.offsetWidth;
+    el.classList.add('p1-node-pulse');
+  }
+  function fire(id) {
+    var motion = $(id + '-motion');
+    var op = $(id + '-op');
+    if (motion && motion.beginElement) { try { motion.beginElement(); } catch (e) {} }
+    if (op && op.beginElement) { try { op.beginElement(); } catch (e) {} }
+  }
+  function resetPips() {
+    for (var i = 1; i <= 3; i++) { var el = $('p1-pip-' + i); if (el) el.classList.remove('filled'); }
+  }
+  function fillPip(i) { var el = $('p1-pip-' + i); if (el) el.classList.add('filled'); }
+  function resetPins() {
+    for (var i = 1; i <= 6; i++) { var el = $('p1-pin-' + i); if (el) el.classList.remove('dropped'); }
+    var c = $('p1-pts-count'); if (c) c.textContent = '0';
+  }
+  function dropPin(i, n) {
+    var el = $('p1-pin-' + i); if (el) el.classList.add('dropped');
+    var c = $('p1-pts-count'); if (c) c.textContent = String(n);
+  }
+
+  function runCycle() {
+    setSignal('offline');
+    resetPips();
+    resetPins();
+    setPath('p1-path-1', false); setPath('p1-path-2', false);
+    setPath('p1-path-3', false); setPath('p1-path-4', false);
+
+    var t = 0;
+    // offline collection — points queue up one by one
+    schedule(t += 350, function () { fillPip(1); });
+    schedule(t += 350, function () { fillPip(2); });
+    schedule(t += 350, function () { fillPip(3); setPath('p1-path-1', true); });
+    // connect — signal comes back
+    schedule(t += 500, function () { setSignal('online'); });
+    schedule(t += 900, function () { setPath('p1-path-1', false); });
+    // sync — queued points burst to the server
+    schedule(t += 50,  function () { setPath('p1-path-2', true); fire('p1-burst-1'); });
+    schedule(t += 220, function () { fire('p1-burst-2'); });
+    schedule(t += 220, function () { fire('p1-burst-3'); resetPips(); });
+    schedule(t += 650, function () { pulse('p1-server-node'); setPath('p1-path-2', false); });
+    // feedback — server confirms points on the map
+    schedule(t += 150, function () { setPath('p1-path-3', true); fire('p1-fb-dot'); });
+    schedule(t += 300, function () { dropPin(1, 1); });
+    schedule(t += 220, function () { dropPin(2, 2); });
+    schedule(t += 220, function () { dropPin(3, 3); setPath('p1-path-3', false); });
+    schedule(t += 220, function () { dropPin(4, 4); });
+    schedule(t += 220, function () { dropPin(5, 5); });
+    schedule(t += 220, function () { dropPin(6, 6); });
+    // dashboard — confirmed points roll up into live coverage
+    schedule(t += 350, function () { setPath('p1-path-4', true); fire('p1-dash-dot'); });
+    schedule(t += 500, function () {
+      pulse('p1-dash-node');
+      covIdx = (covIdx + 1) % covSteps.length;
+      var pct = covSteps[covIdx];
+      var fill = $('p1-cov-fill'); if (fill) fill.setAttribute('width', String(pct * 1.7));
+      var lbl = $('p1-dash-count'); if (lbl) lbl.textContent = pct + '% covered';
+      setPath('p1-path-4', false);
+    });
+    // hold, then loop
+    schedule(t += 1400, function () { runCycle(); });
+  }
+
+  function startCycle() { stopCycle(); runCycle(); }
+
+  Reveal.on('slidechanged', function (e) {
+    if (e.previousSlide && e.previousSlide.querySelector('#phase1-story')) stopCycle();
+    if (e.currentSlide.querySelector('#phase1-story')) startCycle();
+  });
+  Reveal.on('ready', function (e) {
+    if (e.currentSlide.querySelector('#phase1-story')) startCycle();
+  });
+})();
+</script>
+
+<script>
+/* ── PHASE 02: field survey → satellite → training → distribution map, looping ── */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var wait = function (ms) { return new Promise(function (res) { setTimeout(res, ms); }); };
+
+  var SPECIES = [
+    { name: 'Deodar',       color: '#192890' },
+    { name: 'Chir Pine',    color: '#E8A838' },
+    { name: 'Oak',          color: '#2DD4BF' },
+    { name: 'Mixed / Other',color: '#A78BFA' }
+  ];
+
+  var fieldPts = [
+    [150,240,0], [190,190,1], [130,160,2], [230,260,3],
+    [260,180,0], [300,220,1], [340,150,2], [310,100,3],
+    [200,110,0], [370,200,1]
+  ];
+
+  var gridCols = 8, gridRows = 6;
+  var gx0 = 75, gy0 = 65, gx1 = 405, gy1 = 295;
+  var cellW = (gx1 - gx0) / gridCols, cellH = (gy1 - gy0) / gridRows;
+  var classPattern = [
+    0,0,1,1,1,3,3,2,
+    0,1,1,1,1,3,3,2,
+    1,1,1,3,3,3,2,2,
+    1,1,3,3,3,3,2,2,
+    0,1,3,3,0,0,2,0,
+    0,0,3,0,0,0,0,2
+  ];
+
+  var fieldGroup, gridGroup, distGroup, sat, chips, model, ringActive, modelPct, legend, phaseDot, phaseLabel;
+  var cells = [];
+  var cancelled = true, running = false;
+
+  function init() {
+    fieldGroup = $('sd2-field'); gridGroup = $('sd2-grid'); distGroup = $('sd2-dist');
+    sat = $('sd2-sat'); chips = $('sd2-chips'); model = $('sd2-model');
+    ringActive = $('sd2-ring-active'); modelPct = $('sd2-model-pct');
+    legend = $('sd2-legend'); phaseDot = $('sd2-phase-dot'); phaseLabel = $('sd2-phase-label');
+    if (!gridGroup || cells.length) return;
+
+    for (var r = 0; r < gridRows; r++) {
+      for (var c = 0; c < gridCols; c++) {
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        var x0 = gx0 + c * cellW, y0 = gy0 + r * cellH;
+        rect.setAttribute('class', 'sd2-cell');
+        rect.setAttribute('x', (x0 + 1).toFixed(1));
+        rect.setAttribute('y', (y0 + 1).toFixed(1));
+        rect.setAttribute('width', (cellW - 2).toFixed(1));
+        rect.setAttribute('height', (cellH - 2).toFixed(1));
+        rect.setAttribute('rx', 2);
+        rect.setAttribute('fill', '#4E72D6');
+        rect.setAttribute('opacity', '0');
+        gridGroup.appendChild(rect);
+        cells.push({ el: rect, x0: x0, y0: y0, cx: x0 + cellW / 2, classIdx: classPattern[r * gridCols + c] || 0 });
+      }
+    }
+  }
+
+  function setPhase(mode, label) {
+    if (!phaseDot) return;
+    phaseDot.className = 'sd2-phase-dot';
+    if (mode === 'live') phaseDot.classList.add('is-live');
+    if (mode === 'done') phaseDot.classList.add('is-done');
+    phaseLabel.textContent = label;
+  }
+
+  function addFieldMarker(x, y, speciesIdx) {
+    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'sd2-field-dot');
+    g.setAttribute('transform', 'translate(' + x + ',' + y + ') scale(0)');
+    g.style.transition = 'transform 0.25s cubic-bezier(.2,1.4,.4,1)';
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('r', '5.5');
+    circle.setAttribute('fill', SPECIES[speciesIdx].color);
+    circle.setAttribute('stroke', '#374151');
+    circle.setAttribute('stroke-width', '1');
+    g.appendChild(circle);
+    fieldGroup.appendChild(g);
+    requestAnimationFrame(function () { g.setAttribute('transform', 'translate(' + x + ',' + y + ') scale(1)'); });
+  }
+
+  async function playFieldSurvey() {
+    setPhase('live', 'Field survey');
+    legend.classList.add('is-visible');
+    for (var i = 0; i < fieldPts.length; i++) {
+      addFieldMarker(fieldPts[i][0], fieldPts[i][1], fieldPts[i][2]);
+      await wait(130);
+    }
+    await wait(300);
+  }
+
+  function playSatellite() {
+    setPhase('live', 'Satellite imagery');
+    sat.style.transition = 'none';
+    sat.setAttribute('opacity', '1');
+    sat.setAttribute('transform', 'translate(-30,175)');
+    var start = null, dur = 2200;
+    return new Promise(function (resolve) {
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min(1, (ts - start) / dur);
+        var x = -30 + p * 520;
+        sat.setAttribute('transform', 'translate(' + x.toFixed(1) + ',175)');
+        cells.forEach(function (cell) {
+          if (cell.el.getAttribute('opacity') === '0' && cell.cx <= x - 10) cell.el.setAttribute('opacity', '0.22');
+        });
+        if (p < 1) requestAnimationFrame(step);
+        else {
+          cells.forEach(function (cell) { cell.el.setAttribute('opacity', '0.22'); });
+          sat.style.transition = 'opacity 0.3s ease';
+          sat.setAttribute('opacity', '0');
+          resolve();
+        }
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  async function playTraining() {
+    setPhase('live', 'Model training');
+    await wait(300);
+    ['sd2-chip-1', 'sd2-chip-2', 'sd2-chip-3', 'sd2-chip-4'].forEach(function (id, i) {
+      setTimeout(function () { var el = $(id); if (el) el.classList.add('sd2-chip-out'); }, i * 140);
+    });
+    await wait(700);
+    model.style.transition = 'opacity 0.3s ease';
+    model.setAttribute('opacity', '1');
+
+    var circumference = 2 * Math.PI * 34;
+    ringActive.setAttribute('stroke-dasharray', String(circumference));
+    ringActive.setAttribute('stroke-dashoffset', String(circumference));
+
+    var start = null, dur = 1500;
+    return new Promise(function (resolve) {
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min(1, (ts - start) / dur);
+        var pct = Math.round(p * 100);
+        modelPct.textContent = pct + '%';
+        ringActive.setAttribute('stroke-dashoffset', String(circumference * (1 - p)));
+        if (p < 1) requestAnimationFrame(step);
+        else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  async function playDistribution() {
+    setPhase('done', 'Distribution map');
+    model.style.transition = 'opacity 0.4s ease';
+    model.setAttribute('opacity', '0');
+    cells.forEach(function (c) { c.el.setAttribute('opacity', '0.08'); });
+    Array.from(fieldGroup.children).forEach(function (g) { g.style.opacity = '0.4'; });
+
+    for (var i = 0; i < cells.length; i++) {
+      var cell = cells[i];
+      for (var k = 0; k < 4; k++) {
+        var x = cell.x0 + 6 + Math.random() * (cellW - 12);
+        var y = cell.y0 + 6 + Math.random() * (cellH - 12);
+        var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('class', 'sd2-dist-dot');
+        dot.setAttribute('cx', x.toFixed(1));
+        dot.setAttribute('cy', y.toFixed(1));
+        dot.setAttribute('r', '0');
+        dot.setAttribute('fill', SPECIES[cell.classIdx].color);
+        dot.setAttribute('opacity', '0.85');
+        distGroup.appendChild(dot);
+        requestAnimationFrame((function (d) { return function () { d.setAttribute('r', '2.2'); }; })(dot));
+      }
+      if (i % 4 === 0) await wait(25);
+    }
+    await wait(400);
+  }
+
+  function resetAll() {
+    fieldGroup.innerHTML = '';
+    distGroup.innerHTML = '';
+    cells.forEach(function (c) { c.el.setAttribute('opacity', '0'); });
+    sat.setAttribute('opacity', '0');
+    sat.setAttribute('transform', 'translate(-30,175)');
+    ['sd2-chip-1', 'sd2-chip-2', 'sd2-chip-3', 'sd2-chip-4'].forEach(function (id) {
+      var el = $(id); if (el) el.classList.remove('sd2-chip-out');
+    });
+    model.setAttribute('opacity', '0');
+    modelPct.textContent = '0%';
+    legend.classList.remove('is-visible');
+    setPhase('idle', 'Idle');
+  }
+
+  async function runOnce() {
+    resetAll();
+    await playFieldSurvey();  if (cancelled) return;
+    await playSatellite();    if (cancelled) return;
+    await playTraining();     if (cancelled) return;
+    await playDistribution(); if (cancelled) return;
+    await wait(1800);
+  }
+
+  async function loop() {
+    while (!cancelled) { await runOnce(); }
+    running = false;
+  }
+
+  function startCycle() {
+    init();
+    cancelled = false;
+    if (!running) { running = true; loop(); }
+  }
+  function stopCycle() { cancelled = true; }
+
+  Reveal.on('slidechanged', function (e) {
+    if (e.previousSlide && e.previousSlide.querySelector('#phase2-story')) stopCycle();
+    if (e.currentSlide.querySelector('#phase2-story')) startCycle();
+  });
+  Reveal.on('ready', function (e) {
+    if (e.currentSlide.querySelector('#phase2-story')) startCycle();
+  });
+})();
+</script>
+
+<script>
+/* ── PHASE 03: capture → classify → measure DBH → estimate carbon, looping ── */
+(function () {
+  var timers = [];
+  function $(id) { return document.getElementById(id); }
+  function schedule(delay, fn) { var id = window.setTimeout(fn, delay); timers.push(id); return id; }
+  function stopCycle() { timers.forEach(function (id) { clearTimeout(id); }); timers = []; }
+
+  var SPECIES3 = [
+    { name: 'Deodar',    color: '#192890', dbh: 42, carbon: 0.36 },
+    { name: 'Chir Pine', color: '#E8A838', dbh: 35, carbon: 0.27 },
+    { name: 'Oak',       color: '#2DD4BF', dbh: 51, carbon: 0.48 }
+  ];
+  var idx = -1;
+
+  function setPhase(mode, label) {
+    var dot = $('sd3-phase-dot'), lbl = $('sd3-phase-label');
+    if (!dot) return;
+    dot.className = 'sd3-phase-dot';
+    if (mode === 'live') dot.classList.add('is-live');
+    if (mode === 'done') dot.classList.add('is-done');
+    lbl.textContent = label;
+  }
+  function toggle(id, on) { var el = $(id); if (el) el.classList.toggle('is-visible', on); }
+  function setCorners(on) {
+    document.querySelectorAll('#phase3-story .sd3-corner').forEach(function (el) { el.classList.toggle('is-visible', on); });
+  }
+  function tween(el, to, suffix, decimals, duration) {
+    var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / duration);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var val = to * eased;
+      el.textContent = (decimals ? val.toFixed(decimals) : Math.round(val)) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function runCycle() {
+    idx = (idx + 1) % SPECIES3.length;
+    var sp = SPECIES3[idx];
+
+    setCorners(false);
+    var flash = $('sd3-flash'); if (flash) flash.classList.remove('is-flash');
+    toggle('sd3-tag', false);
+    toggle('sd3-boxline', false);
+    toggle('sd3-calipers', false);
+    toggle('sd3-carbon', false);
+    var dbhVal = $('sd3-dbh-val'); if (dbhVal) dbhVal.textContent = '0 cm';
+    var carbonVal = $('sd3-carbon-val'); if (carbonVal) carbonVal.textContent = '0.00 tCO2e';
+    var carbonSpecies = $('sd3-carbon-species'); if (carbonSpecies) carbonSpecies.textContent = sp.name + ' · 0 cm';
+
+    var t = 0;
+    // capture
+    schedule(t += 300, function () { setPhase('live', 'Capturing photo'); setCorners(true); });
+    schedule(t += 500, function () {
+      if (flash) { flash.classList.add('is-flash'); setTimeout(function () { flash.classList.remove('is-flash'); }, 150); }
+    });
+    // classify
+    schedule(t += 350, function () {
+      setPhase('live', 'Classifying species');
+      var tagText = $('sd3-tag-text'); if (tagText) tagText.textContent = sp.name + ' · 96%';
+      var tagRect = $('sd3-tag-rect'); if (tagRect) tagRect.setAttribute('fill', sp.color);
+      toggle('sd3-tag', true);
+      toggle('sd3-boxline', true);
+    });
+    // measure DBH
+    schedule(t += 1300, function () {
+      setPhase('live', 'Measuring DBH');
+      toggle('sd3-tag', false);
+      toggle('sd3-boxline', false);
+      toggle('sd3-calipers', true);
+      if (dbhVal) tween(dbhVal, sp.dbh, ' cm', 0, 800);
+    });
+    // estimate carbon
+    schedule(t += 1500, function () {
+      setPhase('live', 'Estimating carbon');
+      toggle('sd3-calipers', false);
+      if (carbonSpecies) carbonSpecies.textContent = sp.name + ' · ' + sp.dbh + ' cm';
+      toggle('sd3-carbon', true);
+      if (carbonVal) tween(carbonVal, sp.carbon, ' tCO2e', 2, 800);
+    });
+    schedule(t += 1200, function () { setPhase('done', 'Carbon estimated'); });
+    // hold, then loop with next species
+    schedule(t += 1800, function () { runCycle(); });
+  }
+
+  function startCycle() { stopCycle(); runCycle(); }
+
+  Reveal.on('slidechanged', function (e) {
+    if (e.previousSlide && e.previousSlide.querySelector('#phase3-story')) stopCycle();
+    if (e.currentSlide.querySelector('#phase3-story')) startCycle();
+  });
+  Reveal.on('ready', function (e) {
+    if (e.currentSlide.querySelector('#phase3-story')) startCycle();
+  });
+})();
+</script>
+
+<script>
+/* ── CLOSING SLIDE: Physics-based tag bounce ── */
+(function () {
+  var _raf = null;
+  var PAD  = 32; // padding around content block before bounce
+
+  function startClosingPhysics() {
+    stopClosingPhysics();
+    var closing = document.querySelector('.closing');
+    if (!closing) return;
+    var content = document.getElementById('closing-content');
+    if (!content) return;
+    var tags = Array.from(closing.querySelectorAll('.c-tag'));
+    if (!tags.length) return;
+
+    var W = closing.offsetWidth  || 1280;
+    var H = closing.offsetHeight || 720;
+
+    var states = tags.map(function (tag) {
+      tag.style.right     = 'auto';
+      tag.style.animation = 'none';
+      tag.style.opacity   = '0.22';
+      tag.style.position  = 'absolute';
+
+      // Scatter initial positions on right half of slide
+      var x = W * 0.50 + Math.random() * (W * 0.44);
+      var y = 40       + Math.random() * (H - 80);
+      var speed = 0.22 + Math.random() * 0.28;
+      var angle = Math.random() * Math.PI * 2;
+
+      tag.style.left = x + 'px';
+      tag.style.top  = y + 'px';
+
+      return { el: tag, x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed };
+    });
+
+    function tick() {
+      var closingRect = closing.getBoundingClientRect();
+      var scale = closingRect.width / (closing.offsetWidth || 1280);
+      var cRect  = content.getBoundingClientRect();
+
+      var W = closing.offsetWidth  || 1280;
+      var H = closing.offsetHeight || 720;
+
+      // Content block bounds converted to unscaled slide coordinates
+      var bx = (cRect.left - closingRect.left) / scale - PAD;
+      var by = (cRect.top  - closingRect.top)  / scale - PAD;
+      var bw = cRect.width  / scale + PAD * 2;
+      var bh = cRect.height / scale + PAD * 2;
+
+      // Pass 1: move each tag + wall + content-block collisions
+      states.forEach(function (s) {
+        s.x += s.vx;
+        s.y += s.vy;
+
+        var tw = s.el.offsetWidth  || 60;
+        var th = s.el.offsetHeight || 22;
+
+        // Bounce off slide edges
+        if (s.x < 0)        { s.x = 0;        s.vx =  Math.abs(s.vx); }
+        if (s.x + tw > W)   { s.x = W - tw;   s.vx = -Math.abs(s.vx); }
+        if (s.y < 0)        { s.y = 0;        s.vy =  Math.abs(s.vy); }
+        if (s.y + th > H)   { s.y = H - th;   s.vy = -Math.abs(s.vy); }
+
+        // AABB collision with content block
+        if (s.x < bx + bw && s.x + tw > bx &&
+            s.y < by + bh && s.y + th > by) {
+          var oL = (s.x + tw) - bx;
+          var oR = (bx + bw)  - s.x;
+          var oT = (s.y + th) - by;
+          var oB = (by + bh)  - s.y;
+          var mX = Math.min(oL, oR);
+          var mY = Math.min(oT, oB);
+
+          if (mX <= mY) {
+            if (oL < oR) { s.x = bx - tw - 1; s.vx = -Math.abs(s.vx); }
+            else         { s.x = bx + bw + 1; s.vx =  Math.abs(s.vx); }
+          } else {
+            if (oT < oB) { s.y = by - th - 1; s.vy = -Math.abs(s.vy); }
+            else         { s.y = by + bh + 1; s.vy =  Math.abs(s.vy); }
+          }
+        }
+      });
+
+      // Pass 2: tag-vs-tag AABB collisions
+      for (var i = 0; i < states.length; i++) {
+        for (var j = i + 1; j < states.length; j++) {
+          var a = states[i], b = states[j];
+          var atw = a.el.offsetWidth  || 60, ath = a.el.offsetHeight || 22;
+          var btw = b.el.offsetWidth  || 60, bth = b.el.offsetHeight || 22;
+          if (a.x < b.x + btw && a.x + atw > b.x &&
+              a.y < b.y + bth && a.y + ath > b.y) {
+            var poL = (a.x + atw) - b.x;
+            var poR = (b.x + btw) - a.x;
+            var poT = (a.y + ath) - b.y;
+            var poB = (b.y + bth) - a.y;
+            var pmX = Math.min(poL, poR);
+            var pmY = Math.min(poT, poB);
+            if (pmX <= pmY) {
+              var tvx = a.vx; a.vx = b.vx; b.vx = tvx;
+              if (poL < poR) { a.x = b.x - atw - 1; }
+              else           { a.x = b.x + btw + 1; }
+            } else {
+              var tvy = a.vy; a.vy = b.vy; b.vy = tvy;
+              if (poT < poB) { a.y = b.y - ath - 1; }
+              else           { a.y = b.y + bth + 1; }
+            }
+          }
+        }
+      }
+
+      // Pass 3: flush all positions to DOM
+      states.forEach(function (s) {
+        s.el.style.left = s.x + 'px';
+        s.el.style.top  = s.y + 'px';
+      });
+
+      _raf = requestAnimationFrame(tick);
+    }
+
+    _raf = requestAnimationFrame(tick);
+  }
+
+  function stopClosingPhysics() {
+    if (_raf !== null) { cancelAnimationFrame(_raf); _raf = null; }
+  }
+
+  Reveal.on('slidechanged', function (e) {
+    if (e.currentSlide.querySelector('.closing')) startClosingPhysics();
+    else stopClosingPhysics();
+  });
+
+  Reveal.on('ready', function (e) {
+    if (e.currentSlide.querySelector('.closing')) startClosingPhysics();
+  });
+})();
+</script>
+
+<script>
+/* ── BIPP AI Domains force-directed network ── */
+(function () {
+  var inited = false;
+
+  var domains = ["Forest & Governance", "Food System", "Measurement & Evidence", "Other"];
+
+  var appsTop = [
+    { id:"Forest Resource Inventory",  domains:["Forest & Governance","Measurement & Evidence"] },
+    { id:"AGB Estimation",             domains:["Forest & Governance","Measurement & Evidence"] },
+    { id:"BarkVisionAI",               domains:["Forest & Governance","Measurement & Evidence"] },
+    { id:"MonoDBH",                    domains:["Forest & Governance","Measurement & Evidence"] },
+    { id:"Van Saathi",                 domains:["Forest & Governance"] },
+    { id:"Collab Forest Governance",   domains:["Forest & Governance"] },
+    { id:"FSVE",                       domains:["Food System"] },
+    { id:"HaatVisionAI",               domains:["Food System","Measurement & Evidence"] },
+    { id:"Infrastructure Planning",    domains:["Food System"] },
+    { id:"Income Baseline",            domains:["Measurement & Evidence"] },
+    { id:"LMS AI Studio",              domains:["Other"] }
+  ];
+
+  var appsSub = [
+    { id:"Van Gyan",   parent:"Collab Forest Governance" },
+    { id:"Van Samvad", parent:"Collab Forest Governance" },
+    { id:"Image Cleaning Pipeline", parent:"Income Baseline", domains:["Other"] }
+  ];
+
+  var appTechPairs = [
+    ["AGB Estimation","Allometric Modelling"],
+    ["BarkVisionAI","CNN"],["BarkVisionAI","ResNet50"],["BarkVisionAI","Transfer Learning"],
+    ["Collab Forest Governance","LangGraph"],["Collab Forest Governance","LLM Reasoning"],["Collab Forest Governance","RAG"],["Collab Forest Governance","Vector Database"],
+    ["Forest Resource Inventory","Random Forest"],["Forest Resource Inventory","Geospatial Processing"],["Forest Resource Inventory","Species Distribution Modelling"],
+    ["FSVE","Agentic AI"],["FSVE","LangGraph"],["FSVE","LLM Reasoning"],["FSVE","RAG"],["FSVE","Speech-to-Text"],["FSVE","Text-to-Speech"],["FSVE","Vector Database"],
+    ["HaatVisionAI","6DoF Pose Estimation"],["HaatVisionAI","Instance Segmentation"],["HaatVisionAI","Mask R-CNN"],["HaatVisionAI","Object Detection"],["HaatVisionAI","Transfer Learning"],
+    ["Image Cleaning Pipeline","Cosine Similarity"],["Image Cleaning Pipeline","LLM Reasoning"],["Image Cleaning Pipeline","LVLM"],["Image Cleaning Pipeline","Perceptual Hashing"],
+    ["Income Baseline","Data Fusion"],["Income Baseline","LSTM"],["Income Baseline","LVLM"],["Income Baseline","Nighttime Lights Analysis"],
+    ["Infrastructure Planning","Geospatial Processing"],["Infrastructure Planning","Nighttime Lights Analysis"],["Infrastructure Planning","Spatial Clustering"],
+    ["LMS AI Studio","Agentic AI"],["LMS AI Studio","LangGraph"],["LMS AI Studio","LLM Reasoning"],["LMS AI Studio","RAG"],
+    ["MonoDBH","GroundingDINO"],["MonoDBH","Instance Segmentation"],["MonoDBH","Object Detection"],["MonoDBH","SAM 2"],
+    ["Van Gyan","RAG"],["Van Gyan","Semantic Search"],["Van Gyan","Text-to-Speech"],["Van Gyan","Vector Database"],
+    ["Van Saathi","LangGraph"],["Van Saathi","LLM Reasoning"],["Van Saathi","Multilingual NLP"],["Van Saathi","RAG"],["Van Saathi","Speech-to-Text"],["Van Saathi","Vector Database"],
+    ["Van Samvad","LangGraph"],["Van Samvad","LLM Reasoning"],["Van Samvad","Multilingual NLP"],["Van Samvad","RAG"],["Van Samvad","Speech-to-Text"],["Van Samvad","Vector Database"]
+  ];
+
+  function build() {
+    if (inited) return;
+    inited = true;
+
+    var nodes = [], links = [], idx = {};
+    function addNode(n) { if (idx[n.id] !== undefined) return; idx[n.id] = nodes.length; nodes.push(n); }
+
+    domains.forEach(function (d) { addNode({ id:d, type:"domain" }); });
+    appsTop.forEach(function (a) { addNode({ id:a.id, type:"app" }); });
+    appsSub.forEach(function (a) { addNode({ id:a.id, type:"app-sub" }); });
+
+    appsTop.forEach(function (a) { a.domains.forEach(function (d) { links.push({ source:d, target:a.id, kind:"domain-app" }); }); });
+    appsSub.forEach(function (a) {
+      links.push({ source:a.parent, target:a.id, kind:"app-app" });
+      if (a.domains) a.domains.forEach(function (d) { links.push({ source:d, target:a.id, kind:"domain-app" }); });
+    });
+    appTechPairs.forEach(function (p) {
+      addNode({ id:p[1], type:"tech" });
+      links.push({ source:p[0], target:p[1], kind:"app-tech" });
+    });
+
+    var W = 1000, H = 520;
+
+    function r(d) { return d.type==="domain"?16:d.type==="app"?12:d.type==="app-sub"?9:6; }
+    function charge(d) { return d.type==="domain"?-120:d.type==="app"?-60:d.type==="app-sub"?-50:-15; }
+    function dist(l) { return l.kind==="domain-app"?70:l.kind==="app-app"?30:25; }
+    function radialR(d) {
+      if (d.type==="domain") return 60;
+      if (d.type==="app" || d.type==="app-sub") return 150;
+      return 220;
+    }
+    function radialS(d) {
+      if (d.type==="domain") return 0.9;
+      if (d.type==="app" || d.type==="app-sub") return 0.6;
+      return 0.7;
+    }
+
+    var svg = d3.select("#bipp-network");
+    svg.selectAll("*").remove();
+
+    var linkSel = svg.append("g").selectAll("line").data(links).join("line")
+      .attr("stroke", "#7C93D6").attr("stroke-opacity", 0.28)
+      .attr("stroke-width", function (d) { return d.kind==="domain-app"?1.2:d.kind==="app-app"?1.4:0.65; });
+
+    var nodeSel = svg.append("g").selectAll("circle").data(nodes).join("circle")
+      .attr("r", r)
+      .attr("fill", function (d) {
+        if (d.type==="domain") return "#101C4A";
+        if (d.type==="app") return "#192890";
+        if (d.type==="app-sub") return "#3E6BE0";
+        return "#17B6AE";
+      })
+      .attr("fill-opacity", function (d) { return d.type==="tech"?0.85:1; });
+
+    var appLabels = svg.append("g").selectAll("text")
+      .data(nodes.filter(function (d) { return d.type==="app"||d.type==="app-sub"; }))
+      .join("text")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "Inter, sans-serif").attr("font-weight", "600").attr("font-size", "9.5px").attr("fill", "#1B2C50")
+      .attr("pointer-events", "none")
+      .text(function (d) { return d.id; });
+
+    var domLabels = svg.append("g").selectAll("text")
+      .data(nodes.filter(function (d) { return d.type==="domain"; }))
+      .join("text")
+      .attr("font-family", "'Playfair Display', serif").attr("font-weight", "700").attr("font-size", "12px").attr("fill", "#101C4A")
+      .attr("pointer-events", "none")
+      .text(function (d) { return d.id; });
+
+    var techLabels = svg.append("g").selectAll("text")
+      .data(nodes.filter(function (d) { return d.type==="tech"; }))
+      .join("text")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "Inter, sans-serif").attr("font-weight", "500").attr("font-size", "7.5px").attr("fill", "#374151")
+      .attr("pointer-events", "none")
+      .text(function (d) { return d.id; });
+
+    d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(function (d) { return d.id; }).distance(dist).strength(0.65))
+      .force("charge", d3.forceManyBody().strength(charge).distanceMax(200))
+      .force("center", d3.forceCenter(W / 2, H / 2).strength(0.05))
+      .force("radial", d3.forceRadial(radialR, W / 2, H / 2).strength(radialS))
+      .force("collide", d3.forceCollide().radius(function (d) { return r(d) + 2; }).strength(0.9))
+      .alphaDecay(0.015)
+      .on("tick", function () {
+        var pad = 38;
+        nodes.forEach(function (d) {
+          d.x = Math.max(pad, Math.min(W - pad, d.x));
+          d.y = Math.max(pad, Math.min(H - pad, d.y));
+        });
+        linkSel
+          .attr("x1", function (d) { return d.source.x; }).attr("y1", function (d) { return d.source.y; })
+          .attr("x2", function (d) { return d.target.x; }).attr("y2", function (d) { return d.target.y; });
+        nodeSel
+          .attr("cx", function (d) { return d.x; }).attr("cy", function (d) { return d.y; });
+        appLabels
+          .attr("x", function (d) { return d.x; }).attr("y", function (d) { return d.y - r(d) - 4; });
+        domLabels
+          .attr("x", function (d) { return d.x; }).attr("y", function (d) { return d.y + r(d) + 12; });
+        techLabels
+          .attr("x", function (d) { return d.x; }).attr("y", function (d) { return d.y + r(d) + 9; });
+      });
+  }
+
+  Reveal.on('slidechanged', function (e) {
+    if (e.currentSlide.querySelector('#bipp-network')) setTimeout(build, 80);
+  });
+  Reveal.on('ready', function (e) {
+    if (e.currentSlide.querySelector('#bipp-network')) setTimeout(build, 200);
+  });
+})();
+</script>
+
+</body>
+</html>
