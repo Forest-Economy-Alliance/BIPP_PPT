@@ -336,6 +336,13 @@
   #bipp-net-legend { position:absolute; left:0; bottom:0; display:flex; gap:1.2rem; font-family:'Inter',sans-serif; font-size:0.58rem; font-weight:600; color:#374151; pointer-events:none; }
   #bipp-net-legend .nl-item { display:flex; align-items:center; gap:5px; }
   #bipp-net-legend .nl-dot { border-radius:50%; display:inline-block; flex-shrink:0; }
+
+  /* ── state activity cards (portfolio · by state slide) ── */
+  .state-grid { display:grid; gap:1rem; margin-top:0.6rem; }
+  .state-card { background:#EEF2F8; border-radius:10px; padding:1.1rem 1.3rem; border-left:4px solid #192890; }
+  .state-card-name { font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:#192890; margin-bottom:0.55rem; }
+  .state-card ul { margin:0; padding-left:1.1rem; }
+  .state-card li { font-size:0.78rem; line-height:1.55; color:#374151; margin-bottom:0.25rem; }
 </style>
 </head>
 <body>
@@ -732,10 +739,84 @@
 </section>
 
 <!-- ══════════════════════════════════════════════
+     THE PORTFOLIO — STATE × ACTIVITY CARDS (DEMO)
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">The Portfolio · By State</div>
+    </div>
+    <!-- <div class="phase-badge fade-up" style="background:#192890;">The Portfolio</div> -->
+    <div class="project-title fade-up delay-1">Beyond Himachal: The Wider Portfolio</div>
+    <div class="project-tagline fade-up delay-2">The same design philosophy, applied to different problems in different states</div>
+ 
+    <div class="state-grid fade-up delay-3" style="grid-template-columns:repeat(3, 1fr);">
+      <div class="state-card">
+        <div class="state-card-name">Himachal Pradesh</div>
+        <ul>
+          <li>Species distribution &amp; yield mapping</li>
+          <li>Forest working-plan data integration (Palampur)</li>
+          <li>Forest intelligence layer development</li>
+        </ul>
+      </div>
+      <div class="state-card">
+        <div class="state-card-name">Maharashtra</div>
+        <ul>
+          <li>Forest resource inventory mapping</li>
+          <li>Boundary mapping</li>
+          <li>Management plan creation</li>
+        </ul>
+      </div>
+      <div class="state-card">
+        <div class="state-card-name">Jharkhand</div>
+        <ul>
+          <li>CFR claim digitization and filing</li>
+          <li>Species distribution &amp; yield mapping</li>
+          <li>Behavioural experiments on community motivation</li>
+        </ul>
+      </div>
+      <div class="state-card">
+        <div class="state-card-name">Odisha</div>
+        <ul>
+          <li>CFR claim digitization and filing</li>
+          <li>Species distribution &amp; yield mapping</li>
+          <li>Blockchain-powered forest produce transactions</li>
+          <li>Food system visualization for market decisions</li>
+          <li>Rural market infrastructure mapping</li>
+          <li>Household income baseline surveys</li>
+          <li>Above-ground biomass (AGB) estimation</li>
+        </ul>
+      </div>
+      <div class="state-card">
+        <div class="state-card-name">Andhra Pradesh</div>
+        <ul>
+          <li>CFR claim digitization and filing</li>
+          <li>Species distribution &amp; yield mapping</li>
+        </ul>
+      </div>
+      <div class="state-card">
+        <div class="state-card-name">Bihar</div>
+        <ul>
+          <li>Zero Office Day implementation</li>
+          <li>Capacity-building platform integration</li>
+          <li>Rural market infrastructure mapping</li>
+        </ul>
+      </div>
+       <div class="state-card" style="background:transparent; border-left:4px dashed #9CA3AF; display:flex; align-items:center; justify-content:center;">
+        <div style="text-align:center;">
+          <div class="state-card-name" style="color:#6B7280;">More States &amp; Research</div>
+     </div>
+    <!-- <p style="font-size:0.7rem; color:#6B7280; text-align:center; margin-top:0.9rem;">Six states, one design philosophy — offline-first data, AI-driven analysis, spatial evidence.</p> -->
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
      THE ECOSYSTEM / PORTFOLIO — NETWORK OF STATES
 ══════════════════════════════════════════════ -->
 <section>
-  <iframe src="https://gs.nubits.net" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none; z-index:0;"></iframe>
+  <iframe src="http://localhost:3000" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none; z-index:0;"></iframe>
 </section>
 <!-- ══════════════════════════════════════════════
      CLOSING
