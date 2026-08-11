@@ -610,105 +610,6 @@
 <section data-background-image="media/slide5.png" data-background-size="contain" data-background-position="center" data-background-color="#ffffff"></section>
 
 <!-- ══════════════════════════════════════════════
-     PHASE 03 — CARBON FROM IMAGERY
-══════════════════════════════════════════════ -->
-<section>
-  <div class="project-slide">
-    <div class="slide-nav">
-      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
-      <div class="slide-nav-label">Phase 03 · Carbon Estimation</div>
-    </div>
-    <div class="project-title fade-up">Measuring Carbon, One Tree at a Time</div>
-    <div class="project-tagline fade-up delay-2">A deep learning model classifies species and measures DBH directly from a field photo</div>
-    <div class="info-grid fade-up delay-3" style="grid-template-columns:1fr 0.9fr;">
-      <div class="info-box">
-        <div class="info-box-title">The Pipeline</div>
-        <ul>
-          <li>Guard photographs the tree bark and trunk in the field</li>
-          <li>Model classifies the species from the image</li>
-          <li>Model measures diameter at breast height (DBH) from the same photo</li>
-          <li>Species + DBH → biomass → carbon, at tree level</li>
-        </ul>
-        <!-- <p style="margin-top:0.7rem;">The same 200,000-photo dataset that powers species mapping also becomes the input for a state-wide, tree-level carbon layer — no separate survey required.</p> -->
-      </div>
-      <div class="flow-wrap" id="phase3-story">
-        <div class="sd3-panel">
-          <div class="sd3-hud">
-            <span class="sd3-phase-dot" id="sd3-phase-dot"></span>
-            <span id="sd3-phase-label">Idle</span>
-          </div>
-          <svg class="sd3-svg" viewBox="0 0 360 380">
-            <!-- ground shadow -->
-            <ellipse cx="180" cy="345" rx="72" ry="8" fill="#EEF2F8"/>
-
-            <!-- branches (behind canopy, peeking out at the join) -->
-            <g stroke="#7a5636" stroke-width="6" fill="none" stroke-linecap="round">
-              <path d="M180,140 C170,118 148,102 122,90"/>
-              <path d="M180,140 C190,116 212,100 238,88"/>
-              <path d="M180,140 C178,112 180,84 183,58"/>
-              <path d="M180,140 C165,124 152,118 132,116"/>
-              <path d="M180,140 C196,122 210,118 230,118"/>
-            </g>
-
-            <!-- canopy -->
-            <g>
-              <ellipse cx="180" cy="102" rx="92" ry="60" fill="#6fae55"/>
-              <ellipse cx="122" cy="84"  rx="54" ry="42" fill="#9dc98a"/>
-              <ellipse cx="238" cy="88"  rx="50" ry="40" fill="#83bb68"/>
-              <ellipse cx="180" cy="54"  rx="50" ry="38" fill="#4a8c39"/>
-              <ellipse cx="150" cy="118" rx="42" ry="30" fill="#4a8c39" opacity="0.85"/>
-              <ellipse cx="216" cy="120" rx="44" ry="30" fill="#6fae55" opacity="0.9"/>
-            </g>
-
-            <!-- bark / trunk close-up -->
-            <rect x="138" y="140" width="84" height="200" rx="10" fill="#a97b53"/>
-            <g stroke="#7a5636" stroke-width="1.4" opacity="0.45" fill="none">
-              <path d="M154,144 C152,200 157,260 152,336"/>
-              <path d="M170,142 C173,210 167,280 172,338"/>
-              <path d="M188,143 C185,190 191,270 186,337"/>
-              <path d="M206,145 C209,220 204,290 208,336"/>
-            </g>
-            <rect id="sd3-flash" class="sd3-flash" x="138" y="140" width="84" height="200" rx="10" fill="#ffffff"/>
-
-            <!-- camera viewfinder corners -->
-            <polyline class="sd3-corner" points="152,128 126,128 126,154"/>
-            <polyline class="sd3-corner" points="208,128 234,128 234,154"/>
-            <polyline class="sd3-corner" points="126,326 126,352 152,352"/>
-            <polyline class="sd3-corner" points="234,326 234,352 208,352"/>
-
-            <!-- classification -->
-            <rect id="sd3-boxline" class="sd3-fade" x="138" y="140" width="84" height="200" rx="10" fill="none" stroke="#192890" stroke-width="2"/>
-            <g id="sd3-tag" class="sd3-fade" transform="translate(180,120)">
-              <rect id="sd3-tag-rect" x="-48" y="-14" width="96" height="26" rx="13" fill="#192890"/>
-              <text id="sd3-tag-text" x="0" y="5" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:10.5px; fill:#fff;">Deodar · 96%</text>
-            </g>
-
-            <!-- DBH calipers -->
-            <g id="sd3-calipers" class="sd3-fade">
-              <path class="sd3-caliper-arm" d="M118,255 H138 M118,285 H138 M118,255 V285"/>
-              <path class="sd3-caliper-arm" d="M242,255 H222 M242,285 H222 M242,255 V285"/>
-              <line class="sd3-caliper-line" x1="118" y1="270" x2="242" y2="270"/>
-              <text id="sd3-dbh-val" x="180" y="243" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:13px; fill:#92600A;">0 cm</text>
-              <text x="180" y="303" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:600; font-size:9px; fill:#92600A;">diameter at breast height</text>
-            </g>
-
-            <!-- carbon result -->
-            <g id="sd3-carbon" class="sd3-fade" transform="translate(180,258)">
-              <rect x="-72" y="-52" width="144" height="104" rx="12" fill="rgba(255,255,255,0.95)" stroke="#192890" stroke-width="1.4"/>
-              <text id="sd3-carbon-species" x="0" y="-32" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:700; font-size:9px; fill:#374151;">Deodar · 0 cm</text>
-              <path d="M0,-20 C14,-12 14,4 0,12 C-14,4 -14,-12 0,-20 Z" fill="#2DD4BF"/>
-              <line x1="0" y1="12" x2="0" y2="20" stroke="#2DD4BF" stroke-width="2"/>
-              <text id="sd3-carbon-val" x="0" y="38" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:800; font-size:15px; fill:#192890;">0.00 tCO2e</text>
-              <text x="0" y="50" text-anchor="middle" style="font-family:'Inter',sans-serif; font-weight:500; font-size:7.5px; fill:#6B7280;">illustrative, tree-level estimate</text>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════
      PHASE 04 — PALAMPUR ADOPTION
 ══════════════════════════════════════════════ -->
 <section>
@@ -780,6 +681,42 @@
           <rect x="199" y="182" width="110" height="24" rx="12" fill="#E8A838"/>
           <text x="254" y="198" text-anchor="middle" fill="#fff" style="font-family:'Playfair Display',serif;font-size:9px;font-weight:700;">✓  Adopted · Palampur</text>
         </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PHASE 03 (moved) — WHAT THE DATA ALSO MADE POSSIBLE
+══════════════════════════════════════════════ -->
+<section>
+  <div class="project-slide">
+    <div class="slide-nav">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">Phase 03 · Carbon Estimation &amp; Research Output</div>
+    </div>
+    <div class="project-title fade-up">What the Data Also Made Possible</div>
+    <div class="project-tagline fade-up delay-2">The same field imagery unlocked two additional capabilities</div>
+    <div class="info-grid fade-up delay-3" style="grid-template-columns:1fr 1fr; gap:1.4rem;">
+      <div class="info-box" style="border-left-color:#192890;">
+        <div class="info-box-title">Measuring Carbon, One Tree at a Time</div>
+        <p style="font-size:0.84rem; color:#374151; margin-bottom:0.6rem;">A deep learning model classifies species and measures DBH directly from a field photo — no separate survey required.</p>
+        <ul>
+          <li>Guard photographs the tree bark and trunk in the field</li>
+          <li>Model classifies the species from the image</li>
+          <li>Model measures diameter at breast height (DBH) from the same photo</li>
+          <li>Species + DBH → biomass → carbon, at tree level</li>
+        </ul>
+      </div>
+      <div class="info-box" style="border-left-color:#E8A838; background:rgba(232,168,56,0.07);">
+        <div class="info-box-title" style="color:#92600A;">BarkVisionAI</div>
+        <p style="font-weight:600; color:#192890; margin-bottom:0.5rem;">Novel dataset for rapid tree species identification</p>
+        <p style="font-size:0.84rem; color:#374151; margin-bottom:0.7rem;">As a research output from this work, we also published BarkVisionAI — one of the largest public bark image datasets available, with over 156,001 images.</p>
+        <div class="update-pills">
+          <span class="pill">156,001 images</span>
+          <span class="pill amber">Public Dataset</span>
+          <span class="pill">Tree Species ID</span>
+        </div>
       </div>
     </div>
   </div>
