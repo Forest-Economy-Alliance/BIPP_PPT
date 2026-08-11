@@ -386,6 +386,11 @@
 ══════════════════════════════════════════════ -->
 <section>
   <div class="project-slide" style="position:relative; overflow:hidden;">
+    <!-- slide-nav at top level so the JS header spans full slide width -->
+    <div class="slide-nav" style="position:relative; z-index:2;">
+      <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
+      <div class="slide-nav-label">The Case · Himachal Pradesh</div>
+    </div>
     <!-- image bleeds to right/top/bottom edges -->
     <div style="position:absolute; top:0; right:0; bottom:0; width:44%; z-index:0;">
       <img src="media/image.png" alt="Himachal Pradesh Forest" style="width:100%; height:100%; object-fit:cover; display:block;" />
@@ -411,12 +416,8 @@
         </div>
       </div>
     </div>
-    <!-- left content, constrained to 56% width -->
-    <div style="position:relative; z-index:1; width:56%; display:flex; flex-direction:column; height:100%;">
-      <div class="slide-nav">
-        <div class="nav-logo-wrap"><img class="nav-logo" src="media/bipp.png" alt="BIPP · ISB" /></div>
-        <div class="slide-nav-label">The Case · Himachal Pradesh</div>
-      </div>
+    <!-- left content, constrained to 56% width, no slide-nav here -->
+    <div style="position:relative; z-index:1; width:56%; display:flex; flex-direction:column; flex:1;">
       <div class="project-title fade-up">Counting Green Wealth</div>
       <div class="project-tagline fade-up delay-2">Himachal Pradesh Forest Department × BIPP–ISB — a future-ready people's forest economy</div>
       <div class="info-box fade-up delay-3" style="flex:1;">
