@@ -16,6 +16,7 @@
     --brand-dark:     #ffffff;   /* slide background — white */
     --brand-mid:      #EEF2F8;   /* card/info-box backgrounds — BIPP light grey-blue */
     --brand-accent:   #4E72D6;   /* ISB royal blue */
+    --ink:            #192890;
     --brand-accent2:  #E8A838;   /* warm gold — complementary accent */
     --brand-text:     #EDF1FF;   /* light text — used inside dark boxes */
     --brand-muted:    #7A90B8;
@@ -353,6 +354,302 @@
   .state-card-name { font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:#192890; margin-bottom:0.55rem; }
   .state-card ul { margin:0; padding-left:1.1rem; }
   .state-card li { font-size:0.78rem; line-height:1.55; color:#374151; margin-bottom:0.25rem; }
+
+  /* ── CLOSING (Slide 10) — no global header; full-height split ── */
+  .closing-pane {
+    padding: 0;
+    background: #ffffff;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .closing-layout {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(220px, 0.7fr);
+    background: #ffffff;
+  }
+  .closing-panel {
+    min-width: 0;
+    min-height: 0;
+    background: #192890;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(1.6rem, 3.5vh, 2.6rem) clamp(1.8rem, 4vw, 3.4rem);
+    box-sizing: border-box;
+    position: relative;
+  }
+  .reveal .closing-panel h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: #ffffff !important;
+    margin: 0 0 1.15rem;
+    text-shadow: none;
+  }
+  .closing-photo {
+    width: 100%;
+    height: clamp(200px, 36vh, 320px);
+    border-radius: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+    margin: 0 0 1.15rem;
+  }
+  .reveal .closing-photo img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 0;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+  }
+  .closing-panel p {
+    font-family: var(--font-body);
+    font-size: clamp(0.98rem, 1.35vw, 1.18rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.94);
+    line-height: 1.5;
+    max-width: 38rem;
+    margin: 0 0 1.25rem;
+  }
+  .closing-panel .footer-line {
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+    color: #ffffff;
+    font-weight: 700;
+    margin: 0;
+  }
+  .closing-panel .footer-line span {
+    font-weight: 500;
+    opacity: 0.92;
+  }
+  .closing-side {
+    min-width: 0;
+    min-height: 0;
+    background: #ffffff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0 clamp(1.4rem, 3vw, 2.6rem) clamp(1.6rem, 3.5vh, 2.6rem) 0;
+    box-sizing: border-box;
+  }
+  .reveal .closing-side-logo {
+    width: clamp(110px, 12vw, 150px) !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    display: block;
+    object-fit: contain;
+  }
+
+  /* ── INTRO SLIDE ── */
+  @keyframes iFadeUp {
+    from { transform: translateY(22px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes iZoom {
+    from { transform: scale(1.07); }
+    to   { transform: scale(1); }
+  }
+
+  .intro-wrap {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    overflow: hidden;
+    padding: 0 0 0 4vw;
+    box-sizing: border-box;
+  }
+
+  .intro-left {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .intro-left-top {
+    flex: 1;
+    min-height: 0;
+    padding: 36px 6% 24px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .intro-bipp-logo {
+    height: 44px;
+    object-fit: contain;
+    object-position: left;
+    margin-bottom: 24px;
+    opacity: 0;
+  }
+  .intro-divider {
+    width: 40px;
+    height: 3px;
+    background: var(--brand-accent);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    opacity: 0;
+  }
+  .reveal h1.intro-left-title,
+  h1.intro-left-title {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    color: #0e2145;
+    line-height: 1.25;
+    margin: 0;
+    opacity: 0;
+    text-transform: none;
+    letter-spacing: -0.02em;
+  }
+  .intro-left-bottom {
+    padding: 20px 6%;
+    background: #ffffff;
+    border-top: 2px solid rgba(14, 33, 69, 0.12);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .intro-footer-iofe {
+    height: 44px;
+    object-fit: contain;
+    object-position: left;
+    flex-shrink: 0;
+    opacity: 0;
+  }
+  .intro-footer-sep {
+    width: 1px;
+    height: 28px;
+    background: rgba(14, 33, 69, 0.15);
+    flex-shrink: 0;
+  }
+  .intro-footer-text { flex: 1; }
+  .intro-iofe-label {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    margin-bottom: 3px;
+    opacity: 0;
+  }
+  .intro-footer-bipp {
+    height: 38px;
+    object-fit: contain;
+    object-position: right;
+    flex-shrink: 0;
+    opacity: 0;
+  }
+
+  .intro-right {
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-right-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .intro-right-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(10, 22, 70, 0.93) 0%,
+      rgba(10, 22, 70, 0.6) 38%,
+      rgba(10, 22, 70, 0.12) 65%,
+      transparent 80%
+    );
+  }
+  .intro-right-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5vh 7%;
+  }
+  .intro-right-headline {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.9vw, 1.4rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 1.8vh;
+    opacity: 0;
+  }
+  .intro-stat {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-bottom: 1.1vh;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.45;
+    opacity: 0;
+  }
+  .intro-stat::before {
+    content: '';
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2dd4bf;
+    margin-top: 0.38em;
+  }
+  .intro-stat em {
+    font-style: normal;
+    color: #2dd4bf;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+  }
+
+  /* entrance animations */
+  .present .intro-right-img,
+  .intro-active .intro-right-img { animation: iZoom 1.6s ease forwards; }
+  .present .intro-bipp-logo,
+  .intro-active .intro-bipp-logo { animation: iFadeUp 0.55s 0.1s ease both; }
+  .present .intro-divider,
+  .intro-active .intro-divider { animation: iFadeUp 0.4s 0.22s ease both; }
+  .present h1.intro-left-title,
+  .intro-active h1.intro-left-title { animation: iFadeUp 0.65s 0.3s ease both; }
+  .present .intro-footer-iofe,
+  .intro-active .intro-footer-iofe { animation: iFadeUp 0.5s 0.45s ease both; }
+  .present .intro-iofe-label,
+  .intro-active .intro-iofe-label { animation: iFadeUp 0.45s 0.5s ease both; }
+  .present .intro-footer-bipp,
+  .intro-active .intro-footer-bipp { animation: iFadeUp 0.5s 0.5s ease both; }
+  .present .intro-right-headline,
+  .intro-active .intro-right-headline { animation: iFadeUp 0.65s 0.5s ease both; }
+  .present .intro-stat:nth-child(2),
+  .intro-active .intro-stat:nth-child(2) { animation: iFadeUp 0.55s 0.65s ease both; }
+  .present .intro-stat:nth-child(3),
+  .intro-active .intro-stat:nth-child(3) { animation: iFadeUp 0.55s 0.78s ease both; }
 </style>
 </head>
 <body>
@@ -370,7 +667,7 @@
 <!-- ══════════════════════════════════════════════
      COVER
 ══════════════════════════════════════════════ -->
-<section data-background-color="#ffffff">
+<!-- <section data-background-color="#ffffff">
   <div class="cover">
     <div class="cover-bg-circle"></div>
     <div class="cover-bg-circle2"></div>
@@ -378,6 +675,42 @@
     <div class="cover-eyebrow fade-up"><span class="cover-dot"></span>BIPP · ISB</div>
     <h1 class="fade-up delay-1">Technology Interventions at BIPP<br/><span style="font-size:0.52em; font-weight:600; opacity:0.75;">From Data to Decisions</span></h1>
     <div class="cover-sub fade-up delay-2">The Tool Stack · The Intelligence Layer · The Spatial Layer</div>
+  </div>
+</section> -->
+
+<section>
+  <div class="intro-wrap">
+
+    <!-- left panel -->
+    <div class="intro-left">
+      <div class="intro-left-top">
+        <img src="media/isb.png" class="intro-bipp-logo" alt="ISB" />
+        <div class="intro-divider"></div>
+        <h1 class="intro-left-title">Technology Interventions at BIPP<br/><span style="font-size:0.62em; font-weight:600; opacity:0.7;">From Data to Decisions</span></h1>
+        <div style="margin-top:1.4rem; display:flex; flex-direction:column; gap:0.55rem;">
+          <!-- <div style="font-size:0.7rem; font-weight:600; color:black; letter-spacing:0.06em; opacity:0;">The Tool Stack</div>
+          <div style="font-size:0.7rem; font-weight:600; color:var(--brand-accent); letter-spacing:0.06em; opacity:0;">The Intelligence Layer</div>
+          <div style="font-size:0.7rem; font-weight:600; color:var(--brand-accent); letter-spacing:0.06em; opacity:0;">The Spatial Layer</div> -->
+        </div>
+      </div>
+      <div class="intro-left-bottom">
+          
+          <!-- swap src to ISB standalone logo when file is provided -->
+          <img src="media/bipp.png" style="padding-bottom:5px"  class="intro-footer-bipp" alt="BIPP · ISB" />
+        </div>
+    </div>
+
+    <!-- right panel -->
+    <div class="intro-right">
+      <img src="media/image.png" class="intro-right-img" alt="" />
+      <div class="intro-right-overlay"></div>
+      <div class="intro-right-content">
+        <div class="intro-right-headline">Building at the intersection of technology, governance &amp; community.</div>
+        <div class="intro-stat"><span>From mapping forest resources and rural markets to building AI that speaks in local languages</span></div>
+        <div class="intro-stat"><span>Every tool is grounded in field reality, shaped by evidence, and built for where connectivity ends, literacy is diverse, and the stakes are highest.</span></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -393,7 +726,8 @@
     </div>
     <!-- image bleeds to right/top/bottom edges -->
     <div style="position:absolute; top:0; right:0; bottom:0; width:44%; z-index:0;">
-      <img src="media/image.png" alt="Himachal Pradesh Forest" style="width:100%; height:100%; object-fit:cover; display:block;" />
+      <img src="media/slide2.png" alt="Himachal Pradesh Forest" style="width:100%; height:100%; object-fit:cover; display:block;" />
+      <div style="position:absolute; bottom:0; left:0; right:0; height:55%; background:linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%); pointer-events:none;"></div>
       <div style="position:absolute; bottom:0; left:0; right:0; padding:1.2rem 1.4rem 1rem; margin-bottom:30px;">
         <!-- <div style="font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:0.6rem;">The Scale</div> -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem 1rem;">
@@ -853,7 +1187,7 @@
 <!-- ══════════════════════════════════════════════
      CLOSING
 ══════════════════════════════════════════════ -->
-<section>
+<!-- <section>
   <div class="closing" style="position:relative; overflow:hidden;">
     <div class="c-orb c-orb-1"></div>
     <div class="c-orb c-orb-2"></div>
@@ -883,7 +1217,25 @@ technology, governance & community.</h2>
       <p class="fade-up delay-1" style="color:var(--brand-muted); font-size:0.85rem; max-width:520px; line-height:1.7;">From mapping forest resources and rural markets to building AI that speaks in local languages; every tool is grounded in field reality, shaped by evidence, and built for where connectivity ends, literacy is diverse, and the stakes are highest.</p>
     </div>
   </div>
+</section> -->
+
+<section data-background-color="#ffffff" class="closing-pane">
+  <div class="closing-layout">
+    <div class="closing-panel">
+      <h2>Thank You</h2>
+      <div class="closing-photo">
+        <img src="media/outro.png" alt="Building together — forest canopy" />
+      </div>
+      <!-- <h6 style="color: white; font-family:   'Playfair Display', serif;">Building at the intersection of technology, governance & community.</h6> -->
+      <p style="color: white; font-size: 14px;">From measuring carbon in a single tree to mapping an entire state's forest economy, from digitizing land rights to building AI in local languages — every tool is shaped by evidence and tested by real adoption.</p>
+      <div class="footer-line">Team BIPP</div>
+    </div>
+    <div class="closing-side">
+      <img class="closing-side-logo" src="media/isb.png" alt="ISB" />
+    </div>
+  </div>
 </section>
+
 </div><!-- .slides -->
 </div><!-- .reveal -->
 
@@ -891,7 +1243,7 @@ technology, governance & community.</h2>
 <script>
   Reveal.initialize({
     hash: true,
-    slideNumber: 'c/t',
+    slideNumber: false,
     transition: 'fade',
     transitionSpeed: 'fast',
     backgroundTransition: 'fade',
@@ -950,8 +1302,14 @@ technology, governance & community.</h2>
     gHeader.style.display = 'flex';
   }
 
-  Reveal.on('ready',        e => syncHeader(e.currentSlide));
-  Reveal.on('slidechanged', e => syncHeader(e.currentSlide));
+  function syncBackControl() {
+    const isLast = !Reveal.hasNextSlide() && !Reveal.hasNextVerticalSlide();
+    const ctrl = document.querySelector('.reveal .controls');
+    if (ctrl) ctrl.style.visibility = isLast ? 'hidden' : 'visible';
+  }
+
+  Reveal.on('ready',        e => { syncHeader(e.currentSlide); syncBackControl(); });
+  Reveal.on('slidechanged', e => { syncHeader(e.currentSlide); syncBackControl(); });
   window.addEventListener('resize', () => { syncHeader(Reveal.getCurrentSlide()); });
 </script>
 
